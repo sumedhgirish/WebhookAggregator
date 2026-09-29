@@ -1,0 +1,18 @@
+# OS metadata
+.DS_Store
+Thumbs.db
+
+# Virtual environment and caches
+.venv/
+.edge_tmp/
+__pycache__/
+*.pyc
+*.pyo
+
+# Local generator scripts
+generate_html_docs.py
+generate_pdf_docs.py
+clean_text_formatting.py
+
+# Unsorted raw image dumps (official diagrams are curated in docs/assets/)
+WhatsApp Image*

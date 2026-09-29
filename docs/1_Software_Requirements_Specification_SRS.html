@@ -1,0 +1,886 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Software Requirements Specification (SRS) - Webhook Aggregator System</title>
+  <style>
+    
+:root {
+  --primary-color: #1e3a8a;
+  --secondary-color: #0284c7;
+  --accent-color: #0ea5e9;
+  --text-color: #1e293b;
+  --bg-color: #ffffff;
+  --code-bg: #0f172a;
+  --border-color: #cbd5e1;
+  --table-alt-bg: #f8fafc;
+  --card-bg: #f1f5f9;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  line-height: 1.65;
+  color: var(--text-color);
+  background-color: #f8fafc;
+  margin: 0;
+  padding: 0;
+}
+
+.document-container {
+  max-width: 950px;
+  margin: 40px auto;
+  background: var(--bg-color);
+  padding: 50px 70px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+  border-radius: 8px;
+  border: 1px solid var(--border-color);
+}
+
+header.doc-header {
+  border-bottom: 3px solid var(--primary-color);
+  padding-bottom: 25px;
+  margin-bottom: 35px;
+}
+
+header.doc-header h1 {
+  font-size: 2.2rem;
+  color: var(--primary-color);
+  margin: 0 0 10px 0;
+  font-weight: 800;
+  letter-spacing: -0.5px;
+}
+
+header.doc-header h2 {
+  font-size: 1.35rem;
+  color: var(--secondary-color);
+  margin: 0 0 15px 0;
+  font-weight: 600;
+}
+
+.doc-metadata {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 10px;
+  background: var(--card-bg);
+  padding: 15px 20px;
+  border-radius: 6px;
+  font-size: 0.9rem;
+  border-left: 4px solid var(--primary-color);
+}
+
+.doc-metadata div {
+  margin: 2px 0;
+}
+
+.doc-metadata strong {
+  color: var(--primary-color);
+}
+
+h1, h2, h3, h4, h5, h6 {
+  color: var(--primary-color);
+  font-weight: 700;
+  margin-top: 1.6em;
+  margin-bottom: 0.6em;
+}
+
+h2 {
+  font-size: 1.5rem;
+  border-bottom: 2px solid #e2e8f0;
+  padding-bottom: 6px;
+}
+
+h3 {
+  font-size: 1.25rem;
+  color: #0369a1;
+}
+
+h4 {
+  font-size: 1.1rem;
+  color: #334155;
+}
+
+p {
+  margin: 0.8em 0;
+  text-align: justify;
+}
+
+ul, ol {
+  margin: 0.8em 0;
+  padding-left: 1.8em;
+}
+
+li {
+  margin: 0.35em 0;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 1.5em 0;
+  font-size: 0.88rem;
+  background: #ffffff;
+  border: 1px solid var(--border-color);
+}
+
+th, td {
+  padding: 10px 14px;
+  border: 1px solid var(--border-color);
+  text-align: left;
+}
+
+th {
+  background-color: #0f172a;
+  color: #ffffff;
+  font-weight: 600;
+  letter-spacing: 0.3px;
+}
+
+tr:nth-child(even) {
+  background-color: var(--table-alt-bg);
+}
+
+tr:hover {
+  background-color: #e2e8f0;
+}
+
+pre {
+  background-color: var(--code-bg);
+  color: #f8fafc;
+  padding: 16px 20px;
+  border-radius: 6px;
+  overflow-x: auto;
+  font-family: "JetBrains Mono", "Fira Code", "Courier New", Courier, monospace;
+  font-size: 0.85rem;
+  line-height: 1.45;
+  border: 1px solid #334155;
+  margin: 1.2em 0;
+}
+
+code {
+  font-family: "JetBrains Mono", "Fira Code", "Courier New", Courier, monospace;
+  background: #f1f5f9;
+  color: #0f172a;
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-size: 0.88em;
+  border: 1px solid #e2e8f0;
+}
+
+pre code {
+  background: transparent;
+  color: inherit;
+  padding: 0;
+  border: none;
+}
+
+img {
+  max-width: 100%;
+  height: auto;
+  border-radius: 6px;
+  border: 1px solid var(--border-color);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  margin: 15px auto;
+  display: block;
+}
+
+blockquote {
+  border-left: 4px solid var(--accent-color);
+  background: #f0f9ff;
+  padding: 10px 20px;
+  margin: 1.2em 0;
+  border-radius: 0 6px 6px 0;
+  color: #0369a1;
+}
+
+hr {
+  border: 0;
+  height: 1px;
+  background: #cbd5e1;
+  margin: 2em 0;
+}
+
+.badge {
+  display: inline-block;
+  padding: 2px 8px;
+  border-radius: 4px;
+  font-size: 0.78rem;
+  font-weight: 700;
+  text-transform: uppercase;
+}
+
+.badge-high {
+  background: #fee2e2;
+  color: #991b1b;
+}
+
+.badge-medium {
+  background: #fef3c7;
+  color: #92400e;
+}
+
+.badge-low {
+  background: #e0f2fe;
+  color: #075985;
+}
+
+.nav-bar {
+  background: #0f172a;
+  padding: 12px 25px;
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+}
+
+.nav-bar a {
+  color: #cbd5e1;
+  text-decoration: none;
+  font-weight: 500;
+  font-size: 0.9rem;
+  margin-right: 18px;
+}
+
+.nav-bar a:hover {
+  color: #ffffff;
+  text-decoration: underline;
+}
+
+.print-btn {
+  background: var(--secondary-color);
+  color: white;
+  border: none;
+  padding: 6px 14px;
+  border-radius: 4px;
+  font-weight: 600;
+  font-size: 0.85rem;
+  cursor: pointer;
+}
+
+.print-btn:hover {
+  background: var(--primary-color);
+}
+
+@media print {
+  body {
+    background: #ffffff;
+    font-size: 10pt;
+  }
+  .nav-bar, .print-btn {
+    display: none !important;
+  }
+  .document-container {
+    box-shadow: none;
+    border: none;
+    margin: 0;
+    padding: 0;
+    max-width: 100%;
+  }
+  pre, table, img {
+    page-break-inside: avoid;
+  }
+  h2, h3 {
+    page-break-after: avoid;
+  }
+}
+
+  </style>
+</head>
+<body>
+  <div class="nav-bar">
+    <div>
+      <a href="index.html"><strong>Mini-Project Deliverables Home</strong></a>
+      <a href="1_Software_Requirements_Specification_SRS.html">1. SRS</a>
+      <a href="2_Software_Test_Plan_and_Test_Cases.html">2. Test Plan & Cases</a>
+      <a href="3_Software_Architecture_and_Design_Specification_SADD.html">3. Architecture & Design</a>
+    </div>
+    <button class="print-btn" onclick="window.print()">Print / Export to PDF</button>
+  </div>
+
+  <div class="document-container">
+    <h1 id="software-requirements-specification">Software Requirements Specification</h1>
+<h1 id="for-webhook-aggregator-system-wacdp">For Webhook Aggregator System (WACDP)</h1>
+<p><strong>Version:</strong> 1.0 Baseline</p>
+<p><strong>Prepared by:</strong></p>
+<ul><li><strong>Sumedh Girish</strong> (SRN: <code>PES1UG24CS480</code>)</li><li><strong>Subramani B M</strong> (SRN: <code>PES1UG24CS473</code>)</li><li><strong>Sujan S Halanannavar</strong> (SRN: <code>PES1UG24CS477</code>)</li><li><strong>Skanda Shyam Nadig</strong> (SRN: <code>PES1UG24CS458</code>)</li></ul>
+<p><strong>Organization:</strong> Department of Computer Science & Engineering, PES University</p>
+<p><strong>Date Created:</strong> September 29, 2026</p>
+<p><strong>Course:</strong> Software Engineering (Mini-Project Deliverables Part-1, Batch BPS49)</p>
+<hr/>
+<h1 id="revision-history">Revision History</h1>
+<table>
+<thead><tr>
+<th>Name</th>
+<th>Date</th>
+<th>Reason For Changes</th>
+<th>Version</th>
+</tr></thead>
+<tbody>
+<tr>
+<td>Team BPS49</td>
+<td>September 20, 2026</td>
+<td>Initial problem formulation, scope definition, and structural outline</td>
+<td>0.1</td>
+</tr>
+<tr>
+<td>Team BPS49</td>
+<td>September 25, 2026</td>
+<td>Added comprehensive Functional and Non-Functional Requirements</td>
+<td>0.8</td>
+</tr>
+<tr>
+<td>Team BPS49</td>
+<td>September 29, 2026</td>
+<td>Final IEEE Std 830 (1998) baseline release with UML Use Cases, Security section, and Traceability Matrix</td>
+<td>1.0</td>
+</tr>
+</tbody></table>
+<hr/>
+<h1 id="table-of-contents">Table of Contents</h1>
+<ol start="1"><li><a href="#1-introduction">Introduction</a></li></ol>
+<ul><li>1.1 <a href="#11-purpose">Purpose</a></li><li>1.2 <a href="#12-scope">Scope</a></li><li>1.3 <a href="#13-definitions-acronyms-and-abbreviations">Definitions, Acronyms and Abbreviations</a></li><li>1.4 <a href="#14-references">References</a></li><li>1.5 <a href="#15-overview">Overview</a></li></ul>
+<ol start="2"><li><a href="#2-overall-description">Overall Description</a></li></ol>
+<ul><li>2.1 <a href="#21-product-perspective">Product Perspective</a></li><li>2.1.1 <a href="#211-system-interfaces">System Interfaces</a></li><li>2.1.2 <a href="#212-user-interfaces">User Interfaces</a></li><li>2.1.3 <a href="#213-hardware-interfaces">Hardware Interfaces</a></li><li>2.1.4 <a href="#214-software-interfaces">Software Interfaces</a></li><li>2.1.5 <a href="#215-communications-interfaces">Communications Interfaces</a></li><li>2.1.6 <a href="#216-memory-constraints">Memory Constraints</a></li><li>2.1.7 <a href="#217-operations">Operations</a></li><li>2.1.8 <a href="#218-site-adaptation-requirements">Site Adaptation Requirements</a></li><li>2.2 <a href="#22-product-functions">Product Functions</a></li><li>2.3 <a href="#23-user-characteristics">User Characteristics</a></li><li>2.4 <a href="#24-constraints">Constraints</a></li><li>2.5 <a href="#25-assumptions-and-dependencies">Assumptions and Dependencies</a></li><li>2.6 <a href="#26-apportioning-of-requirements">Apportioning of Requirements</a></li></ul>
+<ol start="3"><li><a href="#3-specific-requirements">Specific Requirements</a></li></ol>
+<ul><li>3.1 <a href="#31-external-interfaces">External Interfaces</a></li><li>3.2 <a href="#32-functions">Functions (Functional Requirements FR-01 through FR-11)</a></li><li>3.3 <a href="#33-performance-requirements">Performance Requirements</a></li><li>3.4 <a href="#34-logical-database-requirements">Logical Database Requirements</a></li><li>3.5 <a href="#35-design-constraints">Design Constraints</a></li><li>3.6 <a href="#36-software-system-attributes">Software System Attributes</a></li><li>3.6.1 <a href="#361-reliability">Reliability</a></li><li>3.6.2 <a href="#362-availability">Availability</a></li><li>3.6.3 <a href="#363-security">Security (Objectives & Requirements)</a></li><li>3.6.4 <a href="#364-maintainability">Maintainability</a></li><li>3.6.5 <a href="#365-portability">Portability</a></li><li>3.7 <a href="#37-uml-use-case-model--detailed-use-cases">UML Use Case Model & Detailed Use Cases</a></li><li>3.8 <a href="#38-additional-comments--analysis">Additional Comments & Analysis</a></li></ul>
+<ol start="4"><li><a href="#4-supporting-information">Supporting Information</a></li></ol>
+<ul><li>4.1 <a href="#41-table-of-contents-and-index">Table of Contents and Index</a></li><li>4.2 <a href="#42-appendixes">Appendixes</a></li><li><a href="#appendix-a-requirements-traceability-matrix-rtm">Appendix A: Requirements Traceability Matrix (RTM)</a></li><li><a href="#appendix-b-jira-scrum-epics--user-story-mapping">Appendix B: Jira Scrum Epics & User Story Mapping</a></li></ul>
+<hr/>
+<h1 id="1-introduction">1. Introduction</h1>
+<p>The introduction provides an overview of the entire Software Requirements Specification (SRS) for the <strong>Webhook Aggregator System (WACDP)</strong>.</p>
+<h2 id="11-purpose">1.1 Purpose</h2>
+<p>The purpose of this document is to provide a complete, rigorous, and unambiguous specification of the requirements for the <strong>Webhook Aggregator System (WACDP)</strong>. This specification serves as the formal contract between stakeholders, system designers, developers, and quality assurance engineers. It details the functional capabilities, external interfaces, non-functional performance envelopes, security controls, and design constraints of the middleware.</p>
+<p><strong>Intended Audience:</strong></p>
+<ul><li><strong>Project Evaluators and Academic Faculty:</strong> To verify conformance to Software Engineering principles and mini-project deliverable milestones.</li><li><strong>System Architects:</strong> To guide the derivation of the Software Architecture & Design Specification (IEEE Std 1016).</li><li><strong>Development Team:</strong> To direct sprint implementation across Jira backlog items (<code>WACDP-4</code> through <code>WACDP-11</code>).</li><li><strong>QA & Verification Engineers:</strong> To construct test plans and execution suites adhering to IEEE Std 829.</li></ul>
+<h2 id="12-scope">1.2 Scope</h2>
+<ul><li><strong>Software Produced:</strong> Webhook Aggregator System (WACDP), a multi-threaded, asynchronous event ingestion, buffering, scheduling, and reliable delivery webhook middleware.</li><li><strong>What the Software Will Do:</strong></li><li>Ingest one-shot and recurring event payloads from upstream services with sub-15ms response latency.</li><li>Buffer requests safely in memory (<code>service_queue</code>, default capacity 50,000 tasks, maximum 100,000 tasks) with active backpressure management.</li><li>Categorize requests and allocate computational tasks to a pre-warmed worker thread pool (4 to 64 threads).</li><li>Execute precision recurring timer callbacks using the host monotonic clock.</li><li>Compute cryptographic HMAC-SHA256 signatures for message authenticity.</li><li>Dispatch payloads to external HTTP/HTTPS target endpoints over mandatory TLS 1.3 with automated connection keep-alive.</li><li>Implement an exponential backoff retry loop (<code>T_wait = 2^tries</code>) for transient destination failures up to <code>MAX_RETRIES = 5</code> (1 initial attempt + 5 retries = 6 total attempts).</li><li>Provide reliable delivery with zero silent message loss by committing unrecoverable failures to a persistent Dead Letter Queue (DLQ) and append-only audit log.</li><li>Expose administrative REST endpoints for status queries, health telemetry, and manual task redrives.</li><li><strong>What the Software Will NOT Do:</strong></li><li>It will not interpret or modify destination-specific internal business logic beyond envelope transformation.</li><li>It will not function as a long-term arbitrary file-storage system.</li><li>It will not provide a graphical user interface (GUI) desktop application; all interactions occur over RESTful APIs.</li><li><strong>Benefits and Goals:</strong> Decouples upstream microservices from downstream receiver availability, prevents cascading timeouts, cushions traffic spikes, and provides reliable asynchronous delivery with bounded retries and durable DLQ persistence.</li></ul>
+<h2 id="13-definitions-acronyms-and-abbreviations">1.3 Definitions, Acronyms and Abbreviations</h2>
+<ul><li><strong>WACDP:</strong> Webhook Aggregator Core Development Pipeline.</li><li><strong>SRS:</strong> Software Requirements Specification.</li><li><strong>DLQ:</strong> Dead Letter Queue (durable storage for failed webhook payloads).</li><li><strong>EDA:</strong> Event-Driven Architecture.</li><li><strong>FIFO:</strong> First-In, First-Out queueing discipline.</li><li><strong>HMAC:</strong> Hash-based Message Authentication Code.</li><li><strong>JWT:</strong> JSON Web Token.</li><li><strong>p99:</strong> 99th percentile response time.</li><li><strong>REST:</strong> Representational State Transfer.</li><li><strong>RFC:</strong> Request for Comments (Internet Engineering Task Force standard).</li><li><strong>RTM:</strong> Requirements Traceability Matrix.</li><li><strong>TLS:</strong> Transport Layer Security (strictly TLS 1.3).</li><li><strong>TSan:</strong> ThreadSanitizer (dynamic race condition detector).</li><li><strong>UUID:</strong> Universally Unique Identifier.</li></ul>
+<h2 id="14-references">1.4 References</h2>
+<ol start="1"><li><strong>IEEE Std 830-1998:</strong> <em>IEEE Recommended Practice for Software Requirements Specifications</em>.</li><li><strong>ISO/IEC/IEEE 29148:2018:</strong> <em>Systems and Software Engineering — Life Cycle Processes — Requirements Engineering</em>.</li><li><strong>RFC 2119:</strong> <em>Key words for use in RFCs to Indicate Requirement Levels</em>, Harvard University, March 1997.</li><li><strong>RFC 7230 / RFC 7231:</strong> <em>Hypertext Transfer Protocol (HTTP/1.1): Message Syntax, Routing, and Semantics</em>, IETF, June 2014.</li><li><strong>RFC 8446:</strong> <em>The Transport Layer Security (TLS) Protocol Version 1.3</em>, IETF, August 2018.</li><li><strong>WACDP Webhook Signing Specification:</strong> <em>HMAC-SHA256 Egress Signature Scheme (inspired by GitHub & Stripe Webhook Security Standards)</em>, PES University, September 2026.</li><li><strong>Jira Scrum Board:</strong> <em>Webhook Aggregator Core Development Pipeline (<code>WACDP</code>)</em>, Board ID 34, Sprints 1 & 2.</li></ol>
+<h2 id="15-overview">1.5 Overview</h2>
+<p>The remainder of this SRS is organized into three major sections:</p>
+<ul><li><strong>Section 2 (Overall Description):</strong> Describes the general factors that affect the product, including system perspective, user classes, operating environment, operational constraints, and assumptions.</li><li><strong>Section 3 (Specific Requirements):</strong> Contains the detailed functional requirements (<code>FR-01</code> through <code>FR-11</code>), performance metrics, logical database schema, software attributes (Reliability, Availability, Security, Maintainability, Portability), and the complete UML Use Case Model.</li><li><strong>Section 4 (Supporting Information):</strong> Contains the Requirements Traceability Matrix (Appendix A) and Jira Epics/Stories mapping (Appendix B).</li></ul>
+<hr/>
+<h1 id="2-overall-description">2. Overall Description</h1>
+<h2 id="21-product-perspective">2.1 Product Perspective</h2>
+<p>The Webhook Aggregator System is a self-contained, high-performance middleware service positioned between upstream event-producing microservices (e.g., Billing, Authentication, Order Management) and downstream third-party webhook receivers (e.g., Partner APIs, Slack, CRM endpoints). It replaces unmanaged, fragile point-to-point webhook delivery with a resilient, observable event pipeline.</p>
+<pre><code class="">+------------------+       HTTP POST       +---------------------------------------------+
+| Upstream Client  | --------------------&gt; |         Webhook Aggregator System           |
+| (Microservice /  |                       |  +---------------------------------------+  |
+|  Billing / Auth) | &lt;-------------------- |  |   Event Loop Ingestion &amp; Fast Ack     |  |
++------------------+       202 Accepted    |  +-------------------+-------------------+  |
+                                           |                      |                      |
+                                           |                      v                      |
+                                           |  +---------------------------------------+  |
+                                           |  |  service_queue (In-Memory Buffer)     |  |
+                                           |  +-------------------+-------------------+  |
+                                           |                      |                      |
+                                           |         +------------+------------+         |
+                                           |         | Worker Thread Pool      |         |
+                                           |         | &amp; Scheduler Timers      |         |
+                                           |         +------------+------------+         |
+                                           |                      |                      |
+                                           |                      v                      |
+                                           |  +---------------------------------------+  |
+                                           |  |  dispatch_queue &amp; Backoff Retry Engine |  |
+                                           |  +-------------------+-------------------+  |
+                                           +----------------------|----------------------+
+                                                                  |
+                                              +-------------------+-------------------+
+                                              |                                       |
+                                              v (HTTP POST with HMAC)                 v (On Max Retries)
+                                    +--------------------+                 +--------------------+
+                                    |  Target Endpoint   |                 | Persistent Storage |
+                                    | (Downstream Hook)  |                 | &amp; Audit Logger DLQ |
+                                    +--------------------+                 +--------------------+</code></pre>
+<h3 id="211-system-interfaces">2.1.1 System interfaces</h3>
+<ul><li><strong>Inbound Ingestion Interface:</strong> HTTP REST API exposing <code>/api/v1/webhooks/ingest</code> and <code>/api/v1/webhooks/recurring</code>. Accepts JSON payloads from authenticated upstream microservices.</li><li><strong>Outbound Dispatch Interface:</strong> High-throughput HTTP/1.1 and HTTP/2 client establishing outbound TLS 1.3 socket connections to external target URLs.</li><li><strong>Durable Persistence Interface:</strong> Direct JDBC/ODBC or SQLite/RocksDB connection for write-ahead logging and DLQ table storage.</li><li><strong>Administrative Telemetry Interface:</strong> RESTful monitoring endpoint <code>/api/v1/health</code> and query endpoint <code>/api/v1/webhooks/{task_id}/status</code>.</li></ul>
+<h3 id="212-user-interfaces">2.1.2 User interfaces</h3>
+<ul><li><strong>API Client Interface:</strong> Programmatic REST interface conforming strictly to OpenAPI 3.0 conventions.</li><li><strong>Administrative CLI / Inspection Dashboard:</strong> Provides formatted tabular status summaries of buffer queue depths, active worker threads, and dead-letter records with filtering capabilities.</li><li><strong>Error Display:</strong> Structured JSON error objects returning standard RFC 7807 problem details with error codes, descriptions, and retry intervals.</li></ul>
+<h3 id="213-hardware-interfaces">2.1.3 Hardware interfaces</h3>
+<ul><li>Standard x86_64 or ARM64 multi-core processor architecture (minimum 2 cores, recommended 8 cores for high-volume concurrency).</li><li>Minimum 2 GB RAM (with 512 MB dedicated to buffer allocations).</li><li>High-speed NVMe or SSD storage with write-ahead caching for persistent DLQ recording.</li></ul>
+<h3 id="214-software-interfaces">2.1.4 Software interfaces</h3>
+<ul><li><strong>Host Operating System:</strong> POSIX-compliant operating system (Linux kernel 5.15+ with epoll, or macOS Darwin 22+ with kqueue).</li><li><strong>Implementation Language & Toolchain:</strong> Modern multi-threaded <strong>C++20</strong> conforming to ISO/IEC 14882:2020 standard, compiled with GCC 12+ or Clang 15+ using <code>-std=c++20</code>.</li><li><strong>Persistent Storage Subsystem:</strong> SQLite 3.35+ or PostgreSQL 15+ engine for durable DLQ transactions.</li><li><strong>Cryptographic Library:</strong> OpenSSL 3.0+ native platform crypto subsystem for HMAC-SHA256 signature calculations.</li></ul>
+<h3 id="215-communications-interfaces">2.1.5 Communications interfaces</h3>
+<ul><li><strong>Network Protocol:</strong> HTTP/1.1 and HTTP/2 over mandatory <strong>TLS 1.3 only</strong> (RFC 8446) for all ingress and egress channels. TLS 1.2 or earlier protocols are strictly rejected.</li><li><strong>Data Serialization:</strong> <code>application/json; charset=utf-8</code>.</li><li><strong>Egress Headers:</strong> Mandatory injection of <code>X-Webhook-ID</code>, <code>X-Webhook-Signature</code>, <code>X-Webhook-Timestamp</code>, and <code>Content-Type</code>.</li></ul>
+<h3 id="216-memory-constraints">2.1.6 Memory constraints</h3>
+<ul><li>Total resident set size (RSS) memory consumption MUST NOT exceed <strong>500 MB</strong> under a sustained load of 50,000 buffered tasks (and up to 100,000 tasks maximum). To satisfy this constraint while permitting maximum individual payloads up to 64 KB, the in-memory queue stores lightweight <code>WebhookTask</code> descriptors (~200 bytes containing <code>task_id</code>, <code>target_url</code>, timestamp, and a <code>PayloadReference</code>), while payloads exceeding 2 KB are staged in a high-speed local temporary payload store (memory-mapped NVMe offload buffer) and dereferenced on demand by worker threads.</li><li>Static buffer memory allocations are bounded at initialization; dynamic expansion must degrade gracefully with active backpressure before hitting host OOM thresholds.</li></ul>
+<h3 id="217-operations">2.1.7 Operations</h3>
+<ul><li><strong>Continuous Unattended Mode:</strong> The system runs as a long-running system daemon (systemd service or Docker container) without requiring human intervention for routine dispatching.</li><li><strong>Automatic Recovery:</strong> On host restart, persistent SQLite DLQ records and recurring schedules in the <code>recurring_schedules</code> table are preserved; active recurring cron schedules are re-armed automatically upon daemon startup.</li><li><strong>Backup & Archival:</strong> DLQ failure logs rotate daily and support automated archiving to compressed cold storage.</li></ul>
+<h3 id="218-site-adaptation-requirements">2.1.8 Site adaptation requirements</h3>
+<ul><li>Configurable environment variables for port bindings (<code>PORT=8080</code>), default queue buffer capacity (<code>DEFAULT_BUFFER_CAPACITY=50000</code>), maximum dynamic queue capacity (<code>MAX_BUFFER_CAPACITY=100000</code>), maximum retries (<code>MAX_RETRIES=5</code>, representing 1 initial attempt + 5 retries = 6 total attempts), and base backoff time (<code>BASE_WAIT_SECONDS=1</code>).</li></ul>
+<h2 id="22-product-functions">2.2 Product functions</h2>
+<ol start="1"><li><strong>Asynchronous Request Ingestion:</strong> Accept one-shot and recurring task submissions over REST API and validate payload schemas in under 15 ms.</li><li><strong>Buffering & Concurrency Management:</strong> Push validated requests to an internal bounded, thread-safe FIFO buffer (<code>service_queue</code>, default 50,000 tasks, max 100,000 tasks).</li><li><strong>Dynamic Task Allocation:</strong> Assign tasks to idle worker threads in the worker thread pool (4 to 64 threads) based on request type.</li><li><strong>Scheduled Timer Engine:</strong> Register recurring event handles, manage timer callbacks, and periodically trigger computed payload events.</li><li><strong>Payload Computation & Transformation:</strong> Execute user-defined transformations, add timestamp headers, and sign payloads with HMAC-SHA256.</li><li><strong>Resilient HTTP Dispatch:</strong> Transmit webhook payloads to downstream endpoints over mandatory TLS 1.3 with connection keep-alive.</li><li><strong>Exponential Backoff Retry Subsystem:</strong> Automatically retry transient network failures (HTTP 429, 5xx, socket timeouts/refusals) using formula <code>T_wait = 2^tries</code> up to <code>MAX_RETRIES = 5</code> (1 initial attempt + 5 retries = 6 total attempts). Non-retryable client errors (HTTP 400, 401, 403, 404) are not retried and route immediately to DLQ.</li><li><strong>Dead Letter Queue (DLQ) & Append-Only Audit Logging:</strong> Persist unrecoverable failures into durable storage with complete error diagnostics.</li><li><strong>Status Query & Administrative Inspection:</strong> Expose endpoints for checking task statuses, viewing DLQ payloads, and issuing manual redrives.</li></ol>
+<h2 id="23-user-characteristics">2.3 User characteristics</h2>
+<ul><li><strong>API Client Application Developers:</strong> Highly experienced engineers integrating microservices. They require low-latency ingestion, clear HTTP 202 acknowledgements, and cryptographic signature predictability.</li><li><strong>DevOps / Site Reliability Engineers (SRE):</strong> Technical professionals responsible for operational uptime. They require granular Prometheus-compatible metrics, health endpoints, and automated recovery runbooks.</li><li><strong>Target Endpoint Administrators:</strong> Third-party receiver teams that verify incoming webhooks using HMAC-SHA256 signatures and expect strict anti-replay protection.</li></ul>
+<h2 id="24-constraints">2.4 Constraints</h2>
+<ol start="1"><li><strong>Thread Safety & Race Freedom (NFR-09):</strong> Under the defined concurrency test workload, zero ThreadSanitizer-detected data races, deadlocks, or worker starvation SHALL occur, and lock contention SHALL remain below 5%.</li><li><strong>Memory Bounding & Queue Scalability (NFR-07):</strong> Internal buffers MUST be bounded to prevent Out-Of-Memory (OOM) crashes under upstream traffic spikes (default 50,000 tasks, maximum 100,000 tasks, maintaining total process RSS ≤ 500 MB).</li><li><strong>Non-Blocking Ingestion:</strong> The ingestion event loop MUST NOT perform blocking network I/O or disk operations on the ingestion path.</li><li><strong>Idempotency Support:</strong> WACDP SHALL provide a stable unique <code>X-Webhook-ID</code> across retries; target endpoints MAY use it for idempotent processing.</li><li><strong>Regulatory & Audit Integrity (SEC-REQ-04):</strong> Payload secrets (passwords, tokens, secret keys) must never be written to audit logs in plaintext; recursive JSON-aware sanitization must be enforced.</li><li><strong>Implementation Technology:</strong> The middleware implementation language is strictly standardized on <strong>C++20</strong>.</li></ol>
+<h2 id="25-assumptions-and-dependencies">2.5 Assumptions and dependencies</h2>
+<ul><li>Upstream API clients provide well-formed JSON payloads and valid authentication credentials.</li><li>Target endpoints expose standard HTTP/HTTPS listeners and adhere to RFC 7231 status code conventions.</li><li>DNS resolution services remain available for target endpoint hostnames.</li><li>Host clock monotonically advances without irregular backward time shifts exceeding 50 ms.</li></ul>
+<h2 id="26-apportioning-of-requirements">2.6 Apportioning of requirements</h2>
+<ul><li><strong>Version 1.0 (Current Release):</strong> Core asynchronous ingestion, thread-safe buffering, worker pool allocation, recurring timers, exponential backoff retries, persistent DLQ, and status inspection APIs.</li><li><strong>Version 2.0 (Future Enhancement):</strong> Distributed multi-node clustering with Raft consensus, dynamic distributed rate-limiting via Redis, and Kafka partition bridging.</li></ul>
+<hr/>
+<h1 id="3-specific-requirements">3. Specific Requirements</h1>
+<h2 id="31-external-interfaces">3.1 External interfaces</h2>
+<h3 id="311-inbound-ingestion-request-specification">3.1.1 Inbound Ingestion Request Specification</h3>
+<ul><li><strong>Item Name:</strong> Webhook Ingestion Payload</li><li><strong>Purpose:</strong> Submit an event for asynchronous delivery.</li><li><strong>Source:</strong> Upstream API Client</li><li><strong>Destination:</strong> Ingestion Gateway Event Loop</li><li><strong>Format:</strong> JSON object conforming to the schema below:</li><li><code>type</code> (string, required): Enum <code>["one-shot", "recurring"]</code>.</li><li><code>target_url</code> (string, required): Fully qualified HTTP/HTTPS URL.</li><li><code>payload</code> (object, required): Arbitrary JSON payload data (maximum size 64 KB; requests exceeding 64 KB are rejected with HTTP 413 Payload Too Large; payloads > 2 KB are staged to local temporary storage).</li><li><code>schedule</code> (string or integer, optional): Cron string (e.g. <code>"0 <em>/2 </em> <em> </em>"</code>) or interval in milliseconds (min <code>1000</code>).</li><li><strong>Timing:</strong> Ingestion response returned within 15 ms at p99.</li></ul>
+<h3 id="312-outbound-webhook-delivery-specification">3.1.2 Outbound Webhook Delivery Specification</h3>
+<ul><li><strong>Item Name:</strong> Dispatched Webhook Request</li><li><strong>Purpose:</strong> Transmit the computed payload to the recipient endpoint.</li><li><strong>Destination:</strong> Target Endpoint</li><li><strong>Headers Transmitted:</strong></li><li><code>Content-Type: application/json</code></li><li><code>X-Webhook-ID: <UUIDv4></code></li><li><code>X-Webhook-Timestamp: <UnixEpochSeconds></code></li><li><code>X-Webhook-Signature: t=<Timestamp>,v1=<HMAC-SHA256-Hex></code></li><li><strong>Response Expected:</strong> HTTP status 200, 201, 202, or 204 within 5,000 ms.</li></ul>
+<hr/>
+<h2 id="32-functions">3.2 Functions</h2>
+<p>In strict adherence to engineering deliverables guidelines, all functional requirements are specified using the <strong>exact method of specification</strong>:</p>
+<h4 id="fr-01-asynchronous-request-ingestion--schema-validation">FR-01: Asynchronous Request Ingestion & Schema Validation</h4>
+<ul><li><strong>Jira Mapping:</strong> <code>WACDP-4</code> (EPIC-1: Request Ingestion Engine)</li><li><strong>Description:</strong> The system SHALL provide an HTTP POST endpoint (<code>/api/v1/webhooks/ingest</code>) that receives incoming webhook requests, validates the JSON schema, stages large payloads (> 2 KB) to temporary local storage, and acknowledges receipt immediately.</li><li><strong>Inputs:</strong> HTTP POST request containing <code>target_url</code> (valid URL), <code>payload</code> (JSON object up to 64 KB), <code>type</code> ("one-shot" or "recurring"), and optional <code>schedule</code> (cron string or interval seconds).</li><li><strong>Processing Logic:</strong></li></ul>
+<ol start="1"><li>Parse request body and authenticate client token.</li><li>Validate mandatory fields (<code>target_url</code>, <code>payload</code>, <code>type</code>).</li><li>Reject payloads exceeding 64 KB with HTTP 413 Payload Too Large; reject malformed JSON with HTTP 400 Bad Request.</li><li>Generate a unique <code>task_id</code> (UUIDv4) and timestamp.</li><li>Push the validated task descriptor into <code>service_queue</code>.</li><li>Return HTTP 202 Accepted with task metadata.</li></ol>
+<ul><li><strong>Outputs:</strong> HTTP 202 Accepted response containing <code>{"task_id": "...", "status": "QUEUED", "timestamp": "..."}</code>.</li><li><strong>Acceptance Criteria:</strong> Syntactically valid requests achieve a 99th percentile response time (p99 latency) < 15 ms under a 1,000 req/sec load (with median p50 ≤ 3 ms).</li><li><strong>Priority:</strong> <span class="badge badge-high">High (Mandatory)</span></li></ul>
+<h4 id="fr-02-non-blocking-buffer-enqueueing-service_queue">FR-02: Non-Blocking Buffer Enqueueing (<code>service_queue</code>)</h4>
+<ul><li><strong>Jira Mapping:</strong> <code>WACDP-4</code> (EPIC-1: Request Ingestion Engine)</li><li><strong>Description:</strong> The system SHALL enqueue ingested task descriptors into an internal thread-safe in-memory buffer (<code>service_queue</code>) without blocking the event loop. The queue operates with a default capacity of 50,000 tasks and a maximum dynamic capacity of 100,000 tasks. The warning/throttle threshold is 90% of current capacity, and the rejection threshold is 100% of current hard capacity.</li><li><strong>Inputs:</strong> Lightweight task descriptor containing <code>task_id</code>, <code>type</code>, <code>target_url</code>, <code>payload_ref</code>, <code>auth_headers</code>, and <code>created_at</code>.</li><li><strong>Processing Logic:</strong></li></ul>
+<ol start="1"><li>Acquire queue mutex or atomic pointer in non-blocking mode.</li><li>Inspect current queue depth against thresholds:</li></ol>
+<ul><li>Warning threshold: Depth reaches 90% of current capacity → log warning alert and trigger dynamic buffer expansion up to 100,000 tasks.</li><li>Rejection threshold: Depth reaches 100% of current hard capacity (50,000 default or 100,000 max burst) → immediately return HTTP 429 Too Many Requests with <code>Retry-After: 5</code>.</li></ul>
+<ol start="3"><li>Enqueue task descriptor (~200 bytes) and signal waiting worker threads via condition variable.</li></ol>
+<ul><li><strong>Outputs:</strong> Queue size increment, worker wakeup signal.</li><li><strong>Acceptance Criteria:</strong> Enqueue operation completes in ≤ 50 µs; total process RSS memory remains ≤ 500 MB under 50,000 queued tasks; zero deadlocks observed under 100 concurrent producer threads.</li><li><strong>Priority:</strong> <span class="badge badge-high">High (Mandatory)</span></li></ul>
+<h4 id="fr-03-request-categorization--task-allocation">FR-03: Request Categorization & Task Allocation</h4>
+<ul><li><strong>Jira Mapping:</strong> <code>WACDP-5</code> (EPIC-2: Dispatcher & Retry Subsystem)</li><li><strong>Description:</strong> The worker thread pool SHALL pop requests from <code>service_queue</code>, categorize the request based on <code>type</code>, and branch execution into either immediate one-shot processing or recurring schedule registration.</li><li><strong>Inputs:</strong> Task object popped from <code>service_queue</code>.</li><li><strong>Processing Logic:</strong></li></ul>
+<ol start="1"><li>Worker thread pops next task from <code>service_queue</code>.</li><li>Inspect task attribute <code>type</code>:</li></ol>
+<ul><li>If <code>type == "one-shot"</code>: route to one-shot compute and dispatch pipeline.</li><li>If <code>type == "recurring"</code>: route to recurring scheduler initialization.</li><li>If unrecognized: route to failure audit log with status <code>INVALID_TYPE</code>.</li><li><strong>Outputs:</strong> Routed task instance in designated processing subsystem.</li><li><strong>Acceptance Criteria:</strong> Every popped task is categorized within 1 ms of queue departure; no task remains unallocated.</li><li><strong>Priority:</strong> <span class="badge badge-high">High (Mandatory)</span></li></ul>
+<h4 id="fr-04-one-shot-request-execution--dispatch-queueing">FR-04: One-Shot Request Execution & Dispatch Queueing</h4>
+<ul><li><strong>Jira Mapping:</strong> <code>WACDP-5</code> (EPIC-2: Dispatcher & Retry Subsystem)</li><li><strong>Description:</strong> For one-shot tasks, the worker thread SHALL execute any required computational transformations, attach egress security headers, and enqueue the prepared payload into <code>dispatch_queue</code>.</li><li><strong>Inputs:</strong> One-shot task object.</li><li><strong>Processing Logic:</strong></li></ul>
+<ol start="1"><li>Format target payload and inject metadata (<code>webhook_id</code>, <code>dispatched_at</code>).</li><li>Compute HMAC-SHA256 signature using the registered endpoint secret key.</li><li>Construct dispatch package containing target URL, headers, and signed payload.</li><li>Push dispatch package to <code>dispatch_queue</code>.</li></ol>
+<ul><li><strong>Outputs:</strong> Dispatch package placed on <code>dispatch_queue</code>.</li><li><strong>Acceptance Criteria:</strong> Transformation and signing complete in under 5 ms; payload accurately deposited in <code>dispatch_queue</code>.</li><li><strong>Priority:</strong> <span class="badge badge-high">High (Mandatory)</span></li></ul>
+<h4 id="fr-05-scheduled-recurring-request-configuration">FR-05: Scheduled Recurring Request Configuration</h4>
+<ul><li><strong>Jira Mapping:</strong> <code>WACDP-6</code> (EPIC-2: Dispatcher & Retry Subsystem)</li><li><strong>Description:</strong> For recurring tasks, the system SHALL initialize a precision timer handle, store configuration parameters, and register the handle in the scheduler mapping table.</li><li><strong>Inputs:</strong> Recurring task object with schedule expression (<code>interval_ms</code> or cron format) and endpoint configuration.</li><li><strong>Processing Logic:</strong></li></ul>
+<ol start="1"><li>Parse cron expression or millisecond interval.</li><li>Instantiate timer handle with callback reference to task execution routine.</li><li>Store handle in thread-safe <code>scheduler_mapping</code> indexed by <code>schedule_id</code>.</li><li>Arm timer with host clock subsystem.</li></ol>
+<ul><li><strong>Outputs:</strong> Active timer handle registered in <code>scheduler_mapping</code>.</li><li><strong>Acceptance Criteria:</strong> Timer handles successfully registered within 2 ms; scheduling precision within ± 10 ms of target trigger time.</li><li><strong>Priority:</strong> <span class="badge badge-high">High (Mandatory)</span></li></ul>
+<h4 id="fr-06-timer-driven-execution-callback-handling">FR-06: Timer-Driven Execution Callback Handling</h4>
+<ul><li><strong>Jira Mapping:</strong> <code>WACDP-6</code> (EPIC-2: Dispatcher & Retry Subsystem)</li><li><strong>Description:</strong> Upon timer expiry event, the scheduler SHALL execute the registered callback, recalculate dynamic payload values, re-arm the timer handle, and push the generated payload to <code>dispatch_queue</code>.</li><li><strong>Inputs:</strong> Host timer expiry interrupt / callback trigger.</li><li><strong>Processing Logic:</strong></li></ul>
+<ol start="1"><li>Intercept timer event callback.</li><li>Retrieve task definition from <code>scheduler_mapping</code>.</li><li>Compute updated execution payload and timestamps.</li><li>Push computed payload into <code>dispatch_queue</code>.</li><li>Calculate next execution epoch and update timer handle.</li></ol>
+<ul><li><strong>Outputs:</strong> Executed payload on <code>dispatch_queue</code>, timer re-armed.</li><li><strong>Acceptance Criteria:</strong> Zero missed timer firings during 24-hour continuous execution test with 500 active schedules.</li><li><strong>Priority:</strong> <span class="badge badge-high">High (Mandatory)</span></li></ul>
+<h4 id="fr-07-endpoint-dispatch--network-transmission">FR-07: Endpoint Dispatch & Network Transmission</h4>
+<ul><li><strong>Jira Mapping:</strong> <code>WACDP-7</code> (EPIC-2: Dispatcher & Retry Subsystem)</li><li><strong>Description:</strong> The dispatcher thread SHALL pop payloads from <code>dispatch_queue</code>, open an HTTP connection to the destination URL over mandatory TLS 1.3, and transmit the webhook payload.</li><li><strong>Inputs:</strong> Payload object popped from <code>dispatch_queue</code>.</li><li><strong>Processing Logic:</strong></li></ul>
+<ol start="1"><li>Pop payload from <code>dispatch_queue</code>.</li><li>Resolve target endpoint hostname and acquire HTTP connection from pool.</li><li>Issue HTTP POST request with timeout of 5,000 ms.</li><li>Inspect response code:</li></ol>
+<ul><li>If 200 ≤ status ≤ 299: Delivery successful. Safely release connection to pool.</li><li>If status in {400, 401, 403, 404}: Non-retryable client error. Abort retries immediately and forward to Persistent Storage & Logger (FR-09).</li><li>If status == 429, or 500 ≤ status ≤ 599, or connection refused / socket timeout: Transient error. Initiate exponential backoff retry loop (FR-08).</li><li><strong>Outputs:</strong> Delivery success log or transfer to retry loop / DLQ.</li><li><strong>Acceptance Criteria:</strong> Successful HTTP 2xx deliveries logged and closed cleanly; non-retryable 4xx errors routed directly to DLQ; transient failures handed over to retry loop without thread blockage.</li><li><strong>Priority:</strong> <span class="badge badge-high">High (Mandatory)</span></li></ul>
+<h4 id="fr-08-exponential-backoff--retry-mechanism">FR-08: Exponential Backoff & Retry Mechanism</h4>
+<ul><li><strong>Jira Mapping:</strong> <code>WACDP-7</code> (EPIC-2: Dispatcher & Retry Subsystem)</li><li><strong>Description:</strong> When an endpoint connection fails or responds with a retryable transient error (HTTP 429, 5xx, or network timeout/refusal), the system SHALL execute an exponential backoff retry loop up to <code>MAX_RETRIES = 5</code> retries (1 initial attempt + 5 retries = 6 total attempts). Non-retryable errors (HTTP 400, 401, 403, 404) SHALL NOT be retried.</li><li><strong>Inputs:</strong> Failed dispatch item, initial state (<code>tries = 0</code>, <code>wait_time = 1</code> second).</li><li><strong>Processing Logic:</strong></li></ul>
+<ol start="1"><li>If <code>tries < MAX_RETRIES</code> (where <code>MAX_RETRIES = 5</code>):</li></ol>
+<p>a. Increment <code>tries = tries + 1</code>.</p>
+<p>b. Sleep/pause for <code>wait_time</code> seconds (asynchronously or non-blocking).</p>
+<p>c. Double <code>wait_time = wait_time * 2</code>.</p>
+<p>d. Attempt to send data payload to target endpoint.</p>
+<p>e. If delivery succeeds (HTTP 2xx): safely close connection and terminate retry loop.</p>
+<p>f. If delivery fails with non-retryable status (400, 401, 403, 404): terminate retry loop and forward immediately to Persistent Storage & Logger.</p>
+<p>g. If delivery fails with transient status (429, 5xx, timeout): repeat loop.</p>
+<ol start="2"><li>If <code>tries >= MAX_RETRIES</code> (6 total attempts exhausted: 1 initial attempt + 5 retries) or initial connection cannot be established:</li></ol>
+<p>a. Exit retry loop.</p>
+<p>b. Forward failed payload, error code, and retry history to Persistent Storage & Logger.</p>
+<ul><li><strong>Outputs:</strong> Retry attempt records, final transition to DLQ on exhaustion.</li><li><strong>Acceptance Criteria:</strong> Retry delays strictly follow sequence 1s, 2s, 4s, 8s, 16s (± 100 ms); total attempts strictly capped at 1 initial + 5 retries = 6 total attempts.</li><li><strong>Priority:</strong> <span class="badge badge-high">High (Mandatory)</span></li></ul>
+<h4 id="fr-09-persistent-dead-letter-storage--failure-audit-logging">FR-09: Persistent Dead-Letter Storage & Failure Audit Logging</h4>
+<ul><li><strong>Jira Mapping:</strong> <code>WACDP-8</code>, <code>WACDP-11</code> (EPIC-3: Monitoring, Audit & Persistence Subsystem)</li><li><strong>Description:</strong> The system SHALL persist all permanently failed webhook payloads (exhausted after 6 total attempts or non-retryable 4xx errors), metadata, and error stack traces into durable storage and record an append-only audit entry.</li><li><strong>Inputs:</strong> Exhausted or non-retryable task payload, HTTP status codes, error reason, retry timestamp log, destination URL.</li><li><strong>Processing Logic:</strong></li></ul>
+<ol start="1"><li>Construct Dead Letter Record (DLQ) with <code>task_id</code>, <code>target_url</code>, <code>payload</code>, <code>attempt_count</code>, <code>last_error</code>, and <code>failure_timestamp</code>.</li><li>Persist record into durable storage (ACID transaction).</li><li>Write formatted JSON log entry to append-only audit log file.</li></ol>
+<ul><li><strong>Outputs:</strong> Durable DLQ database record and structured append-only audit log entry.</li><li><strong>Acceptance Criteria:</strong> 100% of payloads failing <code>MAX_RETRIES</code> or non-retryable 4xx are saved to persistent storage; zero data loss during simulated target endpoint outages.</li><li><strong>Priority:</strong> <span class="badge badge-high">High (Mandatory)</span></li></ul>
+<h4 id="fr-10-status-query--health-inspection-api">FR-10: Status Query & Health Inspection API</h4>
+<ul><li><strong>Jira Mapping:</strong> <code>WACDP-8</code> (EPIC-3: Monitoring, Audit & Persistence Subsystem)</li><li><strong>Description:</strong> The system SHALL provide REST endpoints for querying task delivery status by <code>task_id</code> and retrieving system health metrics.</li><li><strong>Inputs:</strong> HTTP GET <code>/api/v1/webhooks/{task_id}/status</code> or <code>/api/v1/health</code>.</li><li><strong>Processing Logic:</strong></li></ul>
+<ol start="1"><li>Authenticate requester.</li><li>Lookup <code>task_id</code> across in-memory active tables and persistent DLQ storage.</li><li>Aggregate metrics: current <code>service_queue</code> depth, active worker threads, total delivered, total failed.</li><li>Return JSON response.</li></ol>
+<ul><li><strong>Outputs:</strong> HTTP 200 with status JSON (<code>QUEUED</code>, <code>PROCESSING</code>, <code>DELIVERED</code>, <code>RETRYING</code>, <code>FAILED</code>).</li><li><strong>Acceptance Criteria:</strong> Status query response latency ≤ 20 ms for 99% of requests.</li><li><strong>Priority:</strong> <span class="badge badge-medium">Medium (Desirable)</span></li></ul>
+<h4 id="fr-11-failed-request-inspection--manual-redrive-api">FR-11: Failed Request Inspection & Manual Redrive API</h4>
+<ul><li><strong>Jira Mapping:</strong> <code>WACDP-8</code> (EPIC-3: Monitoring, Audit & Persistence Subsystem)</li><li><strong>Description:</strong> The system SHALL provide an administrative endpoint to list failed DLQ requests and trigger a manual redrive (re-enqueueing into <code>service_queue</code>).</li><li><strong>Inputs:</strong> HTTP GET <code>/api/v1/webhooks/failed</code> and HTTP POST <code>/api/v1/webhooks/{task_id}/retry</code>.</li><li><strong>Processing Logic:</strong></li></ul>
+<ol start="1"><li>Authenticate administrator identity.</li><li>Fetch failed records with pagination.</li><li>Upon POST retry request, reset <code>tries = 0</code>, update status to <code>QUEUED</code>, and push to <code>service_queue</code>.</li></ol>
+<ul><li><strong>Outputs:</strong> Paginated list of failed webhooks; HTTP 200 on redrive success.</li><li><strong>Acceptance Criteria:</strong> Redriven task successfully re-enters the ingestion queue and follows standard dispatch pipeline.</li><li><strong>Priority:</strong> <span class="badge badge-medium">Medium (Desirable)</span></li></ul>
+<hr/>
+<h2 id="33-performance-requirements">3.3 Performance requirements</h2>
+<ul><li><strong>Static Capacity Limits:</strong></li><li>The system SHALL support buffering up to <strong>100,000 tasks</strong> in the internal <code>service_queue</code> without exhausting primary memory (maintaining total RSS ≤ 500 MB).</li><li>The scheduler SHALL support tracking up to <strong>1,000 concurrent recurring timers</strong>.</li><li><strong>Dynamic Numerical Requirements:</strong></li><li><strong>Ingestion Latency (NFR-01 / WACDP-9):</strong> Syntactically valid requests submitted to <code>/api/v1/webhooks/ingest</code> SHALL achieve a 99th percentile response time (p99 latency) < <strong>15 milliseconds</strong> (with median p50 ≤ 3 ms) under a concurrent load of 1,000 requests per second on reference 4-core, 8 GB RAM hardware.</li><li><strong>Throughput Capacity (NFR-02 / WACDP-9):</strong> The system SHALL sustain an ingestion rate of at least <strong>5,000 requests per second</strong> on reference 4-core, 8 GB RAM hardware.</li><li><strong>Scheduler Precision (NFR-03):</strong> Periodic timer callbacks SHALL execute within <strong>± 10 milliseconds</strong> jitter window of the targeted scheduled boundary.</li></ul>
+<h2 id="34-logical-database-requirements">3.4 Logical database requirements</h2>
+<p>The system maintains a relational or embedded persistent datastore (SQLite/PostgreSQL) for dead-letter persistence and recurring schedule state:</p>
+<h3 id="341-dead-letter-table-dead_letter_webhooks">3.4.1 Dead Letter Table (<code>dead_letter_webhooks</code>)</h3>
+<ul><li><strong>Fields:</strong></li><li><code>task_id</code> (VARCHAR(36), Primary Key): UUIDv4 identifier.</li><li><code>target_url</code> (VARCHAR(512), NOT NULL): Webhook destination URL.</li><li><code>payload_body</code> (TEXT, NOT NULL): Sanitized JSON payload.</li><li><code>total_attempts</code> (INTEGER, NOT NULL): Number of dispatches executed (up to 1 initial + 5 retries = 6 total attempts).</li><li><code>last_error_code</code> (VARCHAR(64)): Final HTTP or network error code.</li><li><code>last_error_message</code> (TEXT): Diagnostic socket error or server response.</li><li><code>created_at</code> (TIMESTAMP WITH TIME ZONE): Ingestion timestamp.</li><li><code>failed_at</code> (TIMESTAMP WITH TIME ZONE): Terminal failure timestamp.</li><li><code>status</code> (VARCHAR(20)): Default <code>'DEAD_LETTER'</code>.</li><li><code>redrive_count</code> (INTEGER): Number of times manually re-queued (default 0).</li><li><strong>Integrity Constraints & Indexing:</strong> B-Tree index on <code>failed_at</code> and <code>status</code> to ensure fast paginated administrative retrieval.</li><li><strong>Retention:</strong> Records are retained for 30 days before automated archival.</li></ul>
+<h3 id="342-persistent-schedules-table-recurring_schedules">3.4.2 Persistent Schedules Table (<code>recurring_schedules</code>)</h3>
+<ul><li><strong>Fields:</strong></li><li><code>schedule_id</code> (VARCHAR(36), Primary Key): UUIDv4 identifier.</li><li><code>target_url</code> (VARCHAR(512), NOT NULL): Webhook destination URL.</li><li><code>schedule_expr</code> (VARCHAR(64), NOT NULL): Cron string or interval in milliseconds.</li><li><code>payload_ref</code> (TEXT, NOT NULL): Serialized payload or offloaded store reference.</li><li><code>headers</code> (TEXT): Optional custom HTTP headers (JSON).</li><li><code>is_active</code> (BOOLEAN, NOT NULL DEFAULT 1): Active timer flag.</li><li><code>created_at</code> (TIMESTAMP WITH TIME ZONE): Creation timestamp.</li><li><code>updated_at</code> (TIMESTAMP WITH TIME ZONE): Modification timestamp.</li><li><code>last_triggered_at</code> (TIMESTAMP WITH TIME ZONE): Last callback execution timestamp.</li><li><strong>Startup Recovery Flow:</strong> On host/daemon restart, the scheduler automatically queries <code>recurring_schedules WHERE is_active = 1</code>, initializes corresponding <code>TimerHandle</code> instances, schedules the next monotonic execution epoch, and registers them into memory without manual intervention.</li></ul>
+<h2 id="35-design-constraints">3.5 Design constraints</h2>
+<ul><li><strong>Queue Scalability & Memory Bounding (NFR-07):</strong> Internal queues enforce a default capacity of 50,000 tasks and a maximum dynamic capacity of 100,000 tasks with active HTTP 429 backpressure. Total process RSS memory MUST remain ≤ 500 MB by storing lightweight <code>WebhookTask</code> descriptors in RAM while staging raw payloads > 2 KB to local disk-backed temporary storage.</li><li><strong>Worker Pool Elasticity & Socket Timeouts (NFR-08):</strong> The worker thread pool dynamically scales between 4 core threads and 64 active threads based on queue backlog; outbound HTTP client connections enforce strict 5,000 ms connect and read timeouts to prevent socket starvation.</li><li><strong>Thread Safety & Low Contention (NFR-09):</strong> Under the defined concurrency test workload, zero ThreadSanitizer-detected data races, deadlocks, or worker starvation SHALL occur, and lock contention SHALL remain below 5%.</li><li><strong>Zero Raw Pointers:</strong> Memory management must be fully leak-free (validated via Valgrind/ASan).</li></ul>
+<hr/>
+<h2 id="36-software-system-attributes">3.6 Software system attributes</h2>
+<h3 id="361-reliability">3.6.1 Reliability</h3>
+<ul><li><strong>Zero Silent Data Loss (NFR-04 / WACDP-11):</strong> 100% of webhook requests accepted with HTTP 202 SHALL be either delivered successfully or committed transactionally to persistent DLQ storage.</li><li><strong>Graceful Degradation & Backoff Sequence Fidelity (NFR-06):</strong> Retries strictly adhere to the mathematical formula <code>T_wait = 2^tries</code> with absolute bounded jitter ≤ ± 100 ms up to <code>MAX_RETRIES = 5</code> (1 initial attempt + 5 retries = 6 total attempts). During downstream outages, the system absorbs tasks in the buffer queue and applies backpressure without crashing.</li></ul>
+<h3 id="362-availability">3.6.2 Availability</h3>
+<ul><li><strong>Service Availability (NFR-05):</strong> The ingestion service SHALL maintain <strong>99.95% availability</strong> measured over a continuous 30-day operational observation window (allowing no more than 21.6 minutes of unplanned downtime per month).</li><li><strong>Crash Recovery:</strong> If the daemon process is restarted, persistent DLQ data remains uncorrupted, and active recurring schedules are reloaded from <code>recurring_schedules</code> within 3 seconds.</li></ul>
+<h3 id="363-security">3.6.3 Security</h3>
+<p>In strict compliance with mini-project requirements, the system establishes <strong>3 Security Objectives</strong> and <strong>4 Security Requirements</strong>:</p>
+<h4 id="security-objectives">Security Objectives:</h4>
+<ol start="1"><li><strong>SEC-OBJ-01: In-Flight & Egress Payload Authenticity & Confidentiality</strong></li></ol>
+<p>The system MUST guarantee that payloads cannot be intercepted or modified in flight, and MUST provide cryptographic proof to target endpoints that webhooks originated exclusively from the Webhook Aggregator System.</p>
+<ol start="2"><li><strong>SEC-OBJ-02: Perimeter Protection & Non-Repudiation</strong></li></ol>
+<p>The system MUST prevent unauthorized entities from injecting arbitrary webhooks, consuming buffer memory, or spoofing caller identities, while maintaining an append-only audit log.</p>
+<ol start="3"><li><strong>SEC-OBJ-03: Resource Exhaustion & Denial-of-Service (DoS) Mitigation</strong></li></ol>
+<p>The system MUST protect internal worker pools, queue buffers, and downstream endpoints from memory exhaustion and flood attacks via adaptive rate limiting.</p>
+<h4 id="security-requirements">Security Requirements:</h4>
+<ol start="1"><li><strong>SEC-REQ-01: Cryptographic Payload Signing via HMAC-SHA256</strong></li></ol>
+<p>For every outbound webhook dispatch, the system SHALL compute an HMAC using SHA-256 according to the WACDP Webhook Signing Specification:</p>
+<pre><code class="text">   Signature = HMAC-SHA256(SecretKey, Timestamp + &quot;.&quot; + PayloadBody)</code></pre>
+<p>The hexadecimal digest MUST be transmitted in the <code>X-Webhook-Signature</code> header (<code>t=<Timestamp>,v1=<HexDigest></code>) alongside <code>X-Webhook-Timestamp</code>. Target endpoints verify this signature and reject replay attacks older than 300 seconds.</p>
+<ol start="2"><li><strong>SEC-REQ-02: Ingestion API Authentication and Rate Limiting</strong></li></ol>
+<p>The <code>/api/v1/webhooks/ingest</code> endpoint SHALL require a Bearer token in the <code>Authorization</code> header. Requests lacking valid credentials MUST be rejected with HTTP 401 Unauthorized in under 2 ms. The gateway SHALL enforce a Token Bucket limit of <strong>1,000 requests per minute per API key</strong>, returning HTTP 429 Too Many Requests upon limit breach.</p>
+<ol start="3"><li><strong>SEC-REQ-03: Mandatory Transport Layer Security (TLS 1.3 Only)</strong></li></ol>
+<p>All inbound connections and outbound endpoint dispatches SHALL enforce <strong>TLS 1.3 only</strong> (RFC 8446) with secure cipher suites (<code>TLS_AES_256_GCM_SHA384</code>). Connection attempts utilizing TLS 1.2, TLS 1.1, or unencrypted plaintext HTTP MUST be strictly rejected.</p>
+<ol start="4"><li><strong>SEC-REQ-04: Append-Only Audit Trail & JSON-Aware Sensitive Data Sanitization</strong></li></ol>
+<p>The persistent DLQ and failure logger SHALL write audit entries to an append-only log. The logger MUST recursively traverse all JSON keys and values, detecting sensitive property names (<code>password</code>, <code>secret</code>, <code>token</code>, <code>api_key</code>, <code>authorization</code>, <code>access_token</code>, <code>client_secret</code>, <code>private_key</code>) across nested objects/arrays, and replace their values with <code><strong><em>REDACTED</strong></em></code> before writing records to disk.</p>
+<h3 id="364-maintainability">3.6.4 Maintainability</h3>
+<ul><li><strong>Modularity (NFR-10):</strong> Ingestion, scheduling, worker dispatching, and persistence components are decoupled via well-defined C++20 interfaces.</li><li><strong>Code Hygiene:</strong> Adheres to IEEE standard documentation and clean code practices with unit test coverage exceeding 85%.</li></ul>
+<h3 id="365-portability">3.6.5 Portability</h3>
+<ul><li><strong>Platform Independence (NFR-11):</strong> The C++20 codebase compiles and runs without modification across POSIX environments including Ubuntu 22.04 LTS, RHEL 9, and macOS Darwin.</li><li><strong>Containerization:</strong> Distributed with an OCI-compliant Dockerfile for rapid deployment on Kubernetes or bare-metal Linux.</li><li><strong>Standards Adherence (NFR-12):</strong> All API communications strictly conform to RFC 7230, RFC 7231, and RFC 8446 (TLS 1.3). Egress signing adheres to the WACDP Webhook Signing Specification.</li></ul>
+<hr/>
+<h2 id="37-uml-use-case-model--detailed-use-cases">3.7 UML Use Case Model & Detailed Use Cases</h2>
+<h3 id="371-uml-use-case-diagram">3.7.1 UML Use Case Diagram</h3>
+<p>The following UML Use Case Diagram illustrates the system boundary, actors, core use cases, and relationship associations (<code>«include»</code>, <code>«extend»</code>):</p>
+<div style="text-align: center;"><img src="docs/assets/uml_use_case_diagram.jpeg" alt="Webhook Aggregator System Use Case Diagram"/><p style="text-align:center; font-size:0.85rem; color:#64748b;"><em>Figure: Webhook Aggregator System Use Case Diagram</em></p></div>
+<pre><code class="">===================================================================================
+                             WEBHOOK AGGREGATOR SYSTEM
+===================================================================================
+
+       +---------------------------+
+       |        API Client         |
+       +---------------------------+
+         |            |          |
+         |            |          +-----------------------------------+
+         |            |                                              |
+         v            v                                              v
+   (Configure     (Submit One-Shot) &lt;.. «extend» .. (Configure Recurring)
+    Recurring)        |
+                      | «include»
+                      v
+               (Service Request)
+                      |
+                      v
+             (Perform Computation)
+                      |
+                      v
+           (Deliver Webhook Payload) ------&gt; +----------------------+
+                                             |   Target Endpoint    |
+       +---------------------------+         +----------------------+
+       |       Administrator       |
+       +---------------------------+
+         |                       |
+         v                       v
+   (View Failed Requests)   (View System &amp; Hook Status)
+===================================================================================</code></pre>
+<h3 id="372-actor-definitions">3.7.2 Actor Definitions</h3>
+<ol start="1"><li><strong>API Client (Primary Actor):</strong> Upstream service that submits one-shot tasks and registers recurring delivery schedules.</li><li><strong>Administrator (Secondary Actor):</strong> System engineer who inspects health metrics, monitors dead-letter queues, and triggers manual retries.</li><li><strong>Target Endpoint (External Actor):</strong> Third-party receiver that receives and acknowledges dispatched webhook payloads.</li></ol>
+<h3 id="373-detailed-use-case-specifications">3.7.3 Detailed Use Case Specifications</h3>
+<h4 id="uc-01-submit-one-shot-request">UC-01: Submit One-Shot Request</h4>
+<ul><li><strong>Primary Actor:</strong> API Client</li><li><strong>Preconditions:</strong> Client holds a valid Bearer token; ingestion service is active.</li><li><strong>Trigger:</strong> Client sends HTTP POST to <code>/api/v1/webhooks/ingest</code> with <code>type: "one-shot"</code>.</li><li><strong>Main Success Scenario:</strong></li></ul>
+<ol start="1"><li>Client submits request with <code>target_url</code> and <code>payload</code>.</li><li>System validates JSON schema and authentication token.</li><li>System creates unique <code>task_id</code> and enqueues task into <code>service_queue</code>.</li><li>System returns HTTP 202 Accepted with <code>task_id</code> to API Client.</li><li>System services request asynchronously (includes UC-03).</li></ol>
+<ul><li><strong>Alternative Flows:</strong></li><li><em>2a. Schema validation failure:</em> Returns HTTP 400 Bad Request.</li><li><em>2b. Authentication failure:</em> Returns HTTP 401 Unauthorized.</li><li><em>3a. Queue saturated:</em> Applies backpressure and returns HTTP 429 Too Many Requests.</li><li><strong>Postconditions:</strong> Task is enqueued in <code>service_queue</code>; client holds unique <code>task_id</code>.</li></ul>
+<h4 id="uc-02-configure-recurring-request">UC-02: Configure Recurring Request</h4>
+<ul><li><strong>Primary Actor:</strong> API Client</li><li><strong>Relationship:</strong> Extends <code>UC-01</code> when scheduling parameters are provided.</li><li><strong>Preconditions:</strong> Client supplies a valid cron expression or millisecond interval (≥ 1,000 ms).</li><li><strong>Trigger:</strong> Client submits request with <code>type: "recurring"</code> and <code>schedule</code> configuration.</li><li><strong>Main Success Scenario:</strong></li></ul>
+<ol start="1"><li>Client submits recurring request specification.</li><li>System validates cron format and interval limits.</li><li>System initializes timer handle and registers it in <code>scheduler_mapping</code>.</li><li>System returns HTTP 201 Created with <code>schedule_id</code>.</li><li>On timer expiration, system generates recurring task instances that execute UC-01/UC-03.</li></ol>
+<ul><li><strong>Alternative Flows:</strong></li><li><em>2a. Invalid cron syntax:</em> Returns HTTP 422 Unprocessable Entity.</li><li><strong>Postconditions:</strong> Timer handle is armed in the host scheduler mapping table.</li></ul>
+<h4 id="uc-03-service-request">UC-03: Service Request</h4>
+<ul><li><strong>Primary Actor:</strong> System (Worker Thread Pool)</li><li><strong>Relationship:</strong> Included by <code>UC-01</code>.</li><li><strong>Preconditions:</strong> At least one task is present in <code>service_queue</code>; worker thread is idle.</li><li><strong>Trigger:</strong> Worker thread wakes up on condition variable notification.</li><li><strong>Main Success Scenario:</strong></li></ul>
+<ol start="1"><li>Worker pops next task from <code>service_queue</code>.</li><li>Worker inspects task type (<code>one-shot</code> vs <code>recurring</code>).</li><li>Worker executes handler and invokes <code>UC-04: Perform Computation</code>.</li></ol>
+<ul><li><strong>Postconditions:</strong> Task is actively processing on worker thread.</li></ul>
+<h4 id="uc-04-perform-computation">UC-04: Perform Computation</h4>
+<ul><li><strong>Primary Actor:</strong> System (Worker Thread Pool)</li><li><strong>Preconditions:</strong> Task is allocated to active worker thread.</li><li><strong>Trigger:</strong> Invoked by <code>UC-03</code>.</li><li><strong>Main Success Scenario:</strong></li></ul>
+<ol start="1"><li>Worker parses raw task payload.</li><li>Worker computes timestamp tokens, dynamic parameters, and checksums.</li><li>Worker signs payload with endpoint HMAC-SHA256 signature.</li><li>Worker pushes prepared dispatch package into <code>dispatch_queue</code>.</li></ol>
+<ul><li><strong>Postconditions:</strong> Formatted, signed dispatch item is enqueued in <code>dispatch_queue</code>.</li></ul>
+<h4 id="uc-05-deliver-webhook-payload">UC-05: Deliver Webhook Payload</h4>
+<ul><li><strong>Primary Actor:</strong> System (Dispatcher Thread)</li><li><strong>Secondary Actor:</strong> Target Endpoint</li><li><strong>Preconditions:</strong> Prepared dispatch item is available in <code>dispatch_queue</code>.</li><li><strong>Trigger:</strong> Dispatcher extracts item from <code>dispatch_queue</code>.</li><li><strong>Main Success Scenario:</strong></li></ul>
+<ol start="1"><li>Dispatcher initiates HTTP POST request to destination URL.</li><li>Target Endpoint responds with HTTP 200/201/204 within 5,000 ms.</li><li>Dispatcher records successful delivery timestamp and releases connection to pool.</li></ol>
+<ul><li><strong>Extensions (Retry Mechanism):</strong></li><li><em>2a. Target Endpoint returns 5xx error or connection times out:</em></li></ul>
+<ol start="1"><li>Dispatcher initiates retry loop (<code>tries = 0</code>, <code>wait_time = 1s</code>).</li><li>Dispatcher waits <code>wait_time</code> seconds.</li><li>Dispatcher retries transmission.</li><li>If successful: connection is closed cleanly; use case terminates.</li><li>If unsuccessful and <code>tries < MAX_TRIES</code>: increments <code>tries</code>, doubles <code>wait_time = wait_time * 2</code>, repeats step 2.</li><li>If <code>tries >= MAX_TRIES</code>: system aborts retry loop, records failed payload into persistent storage, and writes audit failure log.</li></ol>
+<ul><li><strong>Postconditions:</strong> Payload is delivered to Target Endpoint OR permanently stored in DLQ.</li></ul>
+<h4 id="uc-06-view-failed-requests">UC-06: View Failed Requests</h4>
+<ul><li><strong>Primary Actor:</strong> Administrator</li><li><strong>Preconditions:</strong> Administrator is authenticated.</li><li><strong>Trigger:</strong> Admin issues GET request to <code>/api/v1/webhooks/failed</code>.</li><li><strong>Main Success Scenario:</strong></li></ul>
+<ol start="1"><li>System queries persistent failure storage.</li><li>System returns paginated JSON list of failed webhooks with error codes and retry histories.</li><li>Admin inspects failed records and error stack traces.</li></ol>
+<ul><li><strong>Postconditions:</strong> Failed records retrieved without altering stored state.</li></ul>
+<h4 id="uc-07-view-system--hook-status">UC-07: View System & Hook Status</h4>
+<ul><li><strong>Primary Actor:</strong> Administrator</li><li><strong>Preconditions:</strong> Ingestion system is active.</li><li><strong>Trigger:</strong> Admin issues GET request to <code>/api/v1/webhooks/{task_id}/status</code> or <code>/api/v1/health</code>.</li><li><strong>Main Success Scenario:</strong></li></ul>
+<ol start="1"><li>Admin requests status for specific <code>task_id</code> or global telemetry.</li><li>System compiles queue depths, worker states, and task delivery lifecycle stage.</li><li>System returns HTTP 200 and operational telemetry JSON.</li></ol>
+<ul><li><strong>Postconditions:</strong> Accurate system metrics delivered to Administrator.</li></ul>
+<hr/>
+<h2 id="38-additional-comments--analysis">3.8 Additional comments & Analysis</h2>
+<p>The requirements in this specification follow a hybrid organization combining <strong>Feature Organization (Section 3.7.4)</strong> with <strong>Functional Hierarchy (Section 3.7.7)</strong> in accordance with IEEE Std 830-1998 guidelines. The system's high-throughput characteristics make the stimulus-response pairing of the two-stage queue buffering pattern ideal for formal verification.</p>
+<hr/>
+<h1 id="4-supporting-information">4. Supporting Information</h1>
+<h2 id="41-table-of-contents-and-index">4.1 Table of Contents and Index</h2>
+<p>A complete Table of Contents is provided at the beginning of this document. Detailed index cross-references are maintained in Appendix A.</p>
+<h2 id="42-appendixes">4.2 Appendixes</h2>
+<h3 id="appendix-a-requirements-traceability-matrix-rtm">Appendix A: Requirements Traceability Matrix (RTM)</h3>
+<table>
+<thead><tr>
+<th>Requirement ID</th>
+<th>Requirement Summary</th>
+<th>Jira Issue</th>
+<th>Architectural Component</th>
+<th>Test Case ID</th>
+</tr></thead>
+<tbody>
+<tr>
+<td><strong>FR-01</strong></td>
+<td>Asynchronous Ingestion & Schema Validation</td>
+<td><code>WACDP-4</code></td>
+<td>Ingestion Gateway & Event Loop</td>
+<td><code>TC-FR-01</code></td>
+</tr>
+<tr>
+<td><strong>FR-02</strong></td>
+<td>Non-Blocking Enqueueing (<code>service_queue</code>)</td>
+<td><code>WACDP-4</code></td>
+<td>In-Memory <code>service_queue</code> Buffer</td>
+<td><code>TC-FR-02</code></td>
+</tr>
+<tr>
+<td><strong>FR-03</strong></td>
+<td>Request Categorization & Task Allocation</td>
+<td><code>WACDP-5</code></td>
+<td>Worker Thread Pool Manager</td>
+<td><code>TC-FR-03</code></td>
+</tr>
+<tr>
+<td><strong>FR-04</strong></td>
+<td>One-Shot Request Execution & Dispatch Queue</td>
+<td><code>WACDP-5</code></td>
+<td>Worker Thread & <code>dispatch_queue</code></td>
+<td><code>TC-FR-04</code></td>
+</tr>
+<tr>
+<td><strong>FR-05</strong></td>
+<td>Recurring Schedule Configuration</td>
+<td><code>WACDP-6</code></td>
+<td>Scheduler & Timer Subsystem</td>
+<td><code>TC-FR-05</code></td>
+</tr>
+<tr>
+<td><strong>FR-06</strong></td>
+<td>Timer Callback Handling & Execution</td>
+<td><code>WACDP-6</code></td>
+<td>Timer Engine & Callback Registry</td>
+<td><code>TC-FR-06</code></td>
+</tr>
+<tr>
+<td><strong>FR-07</strong></td>
+<td>Endpoint Dispatch & Network Delivery</td>
+<td><code>WACDP-7</code></td>
+<td>Dispatcher Thread & Connection Pool</td>
+<td><code>TC-FR-07</code></td>
+</tr>
+<tr>
+<td><strong>FR-08</strong></td>
+<td>Exponential Backoff Retry Loop</td>
+<td><code>WACDP-7</code></td>
+<td>Retry Subsystem Engine</td>
+<td><code>TC-FR-08</code></td>
+</tr>
+<tr>
+<td><strong>FR-09</strong></td>
+<td>Persistent Dead-Letter Storage & Audit Logging</td>
+<td><code>WACDP-8, 11</code></td>
+<td>Persistent Storage (DLQ) & Logger</td>
+<td><code>TC-FR-09</code></td>
+</tr>
+<tr>
+<td><strong>FR-10</strong></td>
+<td>Status Query & Health Inspection API</td>
+<td><code>WACDP-8</code></td>
+<td>Administrative Status Controller</td>
+<td><code>TC-FR-10</code></td>
+</tr>
+<tr>
+<td><strong>FR-11</strong></td>
+<td>Failed Request Inspection & Manual Redrive</td>
+<td><code>WACDP-8</code></td>
+<td>DLQ Admin Controller</td>
+<td><code>TC-FR-11</code></td>
+</tr>
+<tr>
+<td><strong>NFR-01</strong></td>
+<td>Ingestion Latency (p99 < 15 ms)</td>
+<td><code>WACDP-9</code></td>
+<td>Ingestion Gateway & Event Loop</td>
+<td><code>TC-NFR-01</code></td>
+</tr>
+<tr>
+<td><strong>NFR-02</strong></td>
+<td>Sustained Throughput (5,000 req/s)</td>
+<td><code>WACDP-9</code></td>
+<td>Pipeline Architecture & Thread Pool</td>
+<td><code>TC-NFR-02</code></td>
+</tr>
+<tr>
+<td><strong>NFR-03</strong></td>
+<td>Timer Precision (± 10 ms)</td>
+<td><code>WACDP-6</code></td>
+<td>Scheduler & Timer Subsystem</td>
+<td><code>TC-NFR-03</code></td>
+</tr>
+<tr>
+<td><strong>NFR-04</strong></td>
+<td>Zero Silent Data Loss / Durability</td>
+<td><code>WACDP-11</code></td>
+<td>Persistent DLQ & Write-Ahead Store</td>
+<td><code>TC-NFR-04</code></td>
+</tr>
+<tr>
+<td><strong>NFR-05</strong></td>
+<td>High Availability & Crash Recovery (99.95% Uptime / 30-Day Window)</td>
+<td><code>WACDP-4</code></td>
+<td>Gateway Architecture & State Re-arm</td>
+<td><code>TC-NFR-05</code></td>
+</tr>
+<tr>
+<td><strong>NFR-06</strong></td>
+<td>Graceful Degradation & Backoff Sequence Fidelity (<code>T_wait = 2^tries</code> ± 100 ms)</td>
+<td><code>WACDP-7</code></td>
+<td>Dispatcher & Backoff Engine</td>
+<td><code>TC-NFR-06</code></td>
+</tr>
+<tr>
+<td><strong>NFR-07</strong></td>
+<td>Queue Scalability & Memory Bounding (50k/100k, RSS ≤ 500 MB)</td>
+<td><code>WACDP-4</code></td>
+<td>Bounded <code>service_queue</code> & Disk Offload</td>
+<td><code>TC-NFR-07</code></td>
+</tr>
+<tr>
+<td><strong>NFR-08</strong></td>
+<td>Worker Pool Elasticity & Socket Timeouts (4–64 Threads, 5,000 ms)</td>
+<td><code>WACDP-7</code></td>
+<td>Dynamic Worker Pool & Transport Client</td>
+<td><code>TC-NFR-08</code></td>
+</tr>
+<tr>
+<td><strong>NFR-09</strong></td>
+<td>Thread Safety & Low Contention (Zero TSan Races, Contention < 5%)</td>
+<td><code>WACDP-10</code></td>
+<td>Concurrent Queues & Mutexes</td>
+<td><code>TC-NFR-09</code></td>
+</tr>
+<tr>
+<td><strong>NFR-10</strong></td>
+<td>Subsystem Modularity (Decoupled C++20 Subsystems, >85% Coverage)</td>
+<td><code>WACDP-5</code></td>
+<td>Core Architecture Interfaces</td>
+<td><code>TC-NFR-10</code></td>
+</tr>
+<tr>
+<td><strong>NFR-11</strong></td>
+<td>Multi-Platform POSIX Portability (Linux Ubuntu & macOS Darwin)</td>
+<td><code>WACDP-4</code></td>
+<td>Build Pipeline & Target OS</td>
+<td><code>TC-NFR-11</code></td>
+</tr>
+<tr>
+<td><strong>NFR-12</strong></td>
+<td>Standards Adherence (RFC 7230/7231/8446 & WACDP Webhook Signing)</td>
+<td><code>WACDP-7</code></td>
+<td>Ingestion Gateway & Dispatcher</td>
+<td><code>TC-NFR-12</code></td>
+</tr>
+<tr>
+<td><strong>SEC-REQ-01</strong></td>
+<td>HMAC-SHA256 Payload Signature Verification</td>
+<td><code>WACDP-7</code></td>
+<td>Worker Crypto Transform & Headers</td>
+<td><code>TC-SEC-01</code></td>
+</tr>
+<tr>
+<td><strong>SEC-REQ-02</strong></td>
+<td>Ingestion Token Auth & Rate Limiting</td>
+<td><code>WACDP-4</code></td>
+<td>API Gateway Security Interceptor</td>
+<td><code>TC-SEC-02</code></td>
+</tr>
+<tr>
+<td><strong>SEC-REQ-03</strong></td>
+<td>TLS 1.3 Transport Security</td>
+<td><code>WACDP-7</code></td>
+<td>Network Transport Client</td>
+<td><code>TC-SEC-03</code></td>
+</tr>
+<tr>
+<td><strong>SEC-REQ-04</strong></td>
+<td>Append-Only Audit Log & Secret Redaction</td>
+<td><code>WACDP-11</code></td>
+<td>Failure Audit Logger & Sanitizer</td>
+<td><code>TC-SEC-04</code></td>
+</tr>
+</tbody></table>
+<hr/>
+<h3 id="appendix-b-jira-scrum-epics--user-story-mapping">Appendix B: Jira Scrum Epics & User Story Mapping</h3>
+<p>The following table cross-references the requirements in this SRS with the user stories from the Jira project backlog (<code>SCRUM_SumedhGirish_PES1UG24CS480_BPS49WebhookAggregator.pdf</code>):</p>
+<table>
+<thead><tr>
+<th>Jira Issue ID</th>
+<th>Issue Summary</th>
+<th>Sprint</th>
+<th>Associated Epics</th>
+<th>Related SRS Requirements</th>
+</tr></thead>
+<tbody>
+<tr>
+<td><strong>WACDP-4</strong></td>
+<td>Request Ingestion & Asynchronous Buffering</td>
+<td>Sprint 1</td>
+<td>EPIC-1: Request Ingestion Engine</td>
+<td><code>FR-01</code>, <code>FR-02</code>, <code>NFR-05</code>, <code>NFR-07</code>, <code>NFR-11</code>, <code>SEC-REQ-02</code></td>
+</tr>
+<tr>
+<td><strong>WACDP-5</strong></td>
+<td>Request Categorization & Task Allocation</td>
+<td>Sprint 2</td>
+<td>EPIC-2: Dispatcher & Retry Subsystem</td>
+<td><code>FR-03</code>, <code>FR-04</code>, <code>NFR-10</code></td>
+</tr>
+<tr>
+<td><strong>WACDP-6</strong></td>
+<td>Scheduled Timer Configuration & Execution</td>
+<td>Sprint 2</td>
+<td>EPIC-2: Dispatcher & Retry Subsystem</td>
+<td><code>FR-05</code>, <code>FR-06</code>, <code>NFR-03</code></td>
+</tr>
+<tr>
+<td><strong>WACDP-7</strong></td>
+<td>Endpoint Dispatch & Exponential Backoff Retry</td>
+<td>Sprint 2</td>
+<td>EPIC-2: Dispatcher & Retry Subsystem</td>
+<td><code>FR-07</code>, <code>FR-08</code>, <code>NFR-06</code>, <code>NFR-08</code>, <code>NFR-12</code>, <code>SEC-REQ-01</code>, <code>SEC-REQ-03</code></td>
+</tr>
+<tr>
+<td><strong>WACDP-8</strong></td>
+<td>Failure Audit Logging & Status Query API</td>
+<td>Backlog</td>
+<td>EPIC-3: Monitoring, Audit & Persistence</td>
+<td><code>FR-09</code>, <code>FR-10</code>, <code>FR-11</code></td>
+</tr>
+<tr>
+<td><strong>WACDP-9</strong></td>
+<td>Low Ingestion Latency</td>
+<td>Backlog</td>
+<td>EPIC-1: Request Ingestion Engine</td>
+<td><code>NFR-01</code>, <code>NFR-02</code></td>
+</tr>
+<tr>
+<td><strong>WACDP-10</strong></td>
+<td>Thread Safety & Concurrency</td>
+<td>Backlog</td>
+<td>EPIC-2: Dispatcher & Retry Subsystem</td>
+<td><code>NFR-09</code></td>
+</tr>
+<tr>
+<td><strong>WACDP-11</strong></td>
+<td>Data Durability & Auditability</td>
+<td>Backlog</td>
+<td>EPIC-3: Monitoring, Audit & Persistence</td>
+<td><code>NFR-04</code>, <code>SEC-REQ-04</code></td>
+</tr>
+</tbody></table>
+<hr/>
+<p><em>End of Software Requirements Specification (SRS) — IEEE Std 830-1998</em></p>
+  </div>
+</body>
+</html>
