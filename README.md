@@ -22,13 +22,11 @@ All documents follow formal **IEEE Engineering Standards**, incorporate the Scru
 
 ### Deliverables Compliance Checklist
 
-### Deliverables Compliance Checklist
-
 | Deliverable | Required Format / Standard | Mandatory Elements Required | Status | File Location |
 | :--- | :--- | :--- | :---: | :--- |
-| **1. Software Requirements Specification (SRS)** | **IEEE Std 830-1998** / ISO/IEC/IEEE 29148 | • Introduction, Scope, Perspective, Constraints<br/>• FRs & NFRs using exact specification method<br/>• UML Use Case Diagram + Detailed Specifications<br/>• Security section with ≥ 2 Objectives & ≥ 2 Requirements | **100% Compliant** | [PDF Version (19 pages)](docs/1_Software_Requirements_Specification_SRS.pdf)<br/>[Markdown](docs/1_Software_Requirements_Specification_SRS.md)<br/>[HTML](docs/1_Software_Requirements_Specification_SRS.html) |
-| **2. Software Test Plan (STP)** | **IEEE Std 829-2008** / ISO/IEC/IEEE 29119 | • Test Plan Identifier, Intro & References<br/>• **Section 3** (Test Items & Risk Issues)<br/>• **Section 4** (Features to be Tested / Not Tested)<br/>• **Section 5** (Approach & Strategy)<br/>• **Section 5.1** (Security Validation Strategy)<br/>• Requirements Traceability Matrix (SRS ↔ Test Plan) | **100% Compliant** | [PDF Version (24 pages)](docs/2_Software_Test_Plan_and_Test_Cases.pdf)<br/>[Markdown](docs/2_Software_Test_Plan_and_Test_Cases.md)<br/>[HTML](docs/2_Software_Test_Plan_and_Test_Cases.html) |
-| **3. Software Architecture & Design Specification (SADD)** | **IEEE Std 1016-2009** | • **Architecture:** Component Diagram & 9 Descriptions, Architectural Patterns, Requirements Traceability, Security Architecture<br/>• **Design:** ≥ 2 UML Sequence Diagrams, Multi-Swimlane Activity Diagram, REST API Design, Error Handling & Backoff Math | **100% Compliant** | [PDF Version (17 pages)](docs/3_Software_Architecture_and_Design_Specification_SADD.pdf)<br/>[Markdown](docs/3_Software_Architecture_and_Design_Specification_SADD.md)<br/>[HTML](docs/3_Software_Architecture_and_Design_Specification_SADD.html) |
+| **1. Software Requirements Specification (SRS)** | **IEEE Std 830-1998** / ISO/IEC/IEEE 29148 | • Introduction, Scope, Perspective, Constraints<br/>• FRs & NFRs using exact specification method<br/>• UML Use Case Diagram + Detailed Specifications<br/>• Security section with ≥ 2 Objectives & ≥ 2 Requirements | **100% Compliant** | [PDF Version (19 pages)](docs/1_Software_Requirements_Specification_SRS.pdf)<br/>[Markdown](docs/1_Software_Requirements_Specification_SRS.md) |
+| **2. Software Test Plan (STP)** | **IEEE Std 829-2008** / ISO/IEC/IEEE 29119 | • Test Plan Identifier, Intro & References<br/>• **Section 3** (Test Items & Risk Issues)<br/>• **Section 4** (Features to be Tested / Not Tested)<br/>• **Section 5** (Approach & Strategy)<br/>• **Section 5.1** (Security Validation Strategy)<br/>• Requirements Traceability Matrix (SRS ↔ Test Plan) | **100% Compliant** | [PDF Version (24 pages)](docs/2_Software_Test_Plan_and_Test_Cases.pdf)<br/>[Markdown](docs/2_Software_Test_Plan_and_Test_Cases.md) |
+| **3. Software Architecture & Design Specification (SADD)** | **IEEE Std 1016-2009** | • **Architecture:** Component Diagram & 9 Descriptions, Architectural Patterns, Requirements Traceability, Security Architecture<br/>• **Design:** ≥ 2 UML Sequence Diagrams, Multi-Swimlane Activity Diagram, REST API Design, Error Handling & Backoff Math | **100% Compliant** | [PDF Version (17 pages)](docs/3_Software_Architecture_and_Design_Specification_SADD.pdf)<br/>[Markdown](docs/3_Software_Architecture_and_Design_Specification_SADD.md) |
 | **4. Test Cases Suite (Test Plan Update)** | IEEE Std 829 Test Case Specifications | • Sufficient coverage of both FRs and NFRs<br/>• Minimum 7–10 test cases required (Includes **28 fully elaborated test cases** across Functional, Non-Functional, Security, and E2E) | **100% Compliant** | Included in [docs/2_Software_Test_Plan_and_Test_Cases.pdf](docs/2_Software_Test_Plan_and_Test_Cases.pdf) & [Markdown](docs/2_Software_Test_Plan_and_Test_Cases.md#10-comprehensive-test-cases-functional-non-functional--security) |
 
 ---
@@ -41,16 +39,12 @@ WebhookAggregator/
 ├── SE_Mini_Project_Delivereables_Part-1.pdf              # Evaluation Guidelines & Requirements
 ├── SCRUM_SumedhGirish_PES1UG24CS480_BPS49WebhookAggregator.pdf # Jira Sprint Backlog & Epics
 └── docs/
-    ├── index.html                                        # Web Portal Index for all deliverables
     ├── 1_Software_Requirements_Specification_SRS.md      # IEEE 830 SRS Document (Markdown)
     ├── 1_Software_Requirements_Specification_SRS.pdf     # IEEE 830 SRS Document (Presentation PDF)
-    ├── 1_Software_Requirements_Specification_SRS.html    # IEEE 830 SRS Document (Styled HTML)
     ├── 2_Software_Test_Plan_and_Test_Cases.md            # IEEE 829 Test Plan & 28 Test Cases (Markdown)
     ├── 2_Software_Test_Plan_and_Test_Cases.pdf           # IEEE 829 Test Plan & 28 Test Cases (Presentation PDF)
-    ├── 2_Software_Test_Plan_and_Test_Cases.html          # IEEE 829 Test Plan & 28 Test Cases (Styled HTML)
     ├── 3_Software_Architecture_and_Design_Specification_SADD.md # IEEE 1016 SADD Document (Markdown)
     ├── 3_Software_Architecture_and_Design_Specification_SADD.pdf # IEEE 1016 SADD Document (Presentation PDF)
-    ├── 3_Software_Architecture_and_Design_Specification_SADD.html # IEEE 1016 SADD Document (Styled HTML)
     └── assets/
         ├── uml_use_case_diagram.jpeg                     # Webhook Aggregator Use Case Model
         └── activity_workflow_diagram.jpeg                # Webhook Aggregator 5-Swimlane Workflow
@@ -116,6 +110,3 @@ WebhookAggregator/
 - [1_Software_Requirements_Specification_SRS.md](docs/1_Software_Requirements_Specification_SRS.md)
 - [2_Software_Test_Plan_and_Test_Cases.md](docs/2_Software_Test_Plan_and_Test_Cases.md)
 - [3_Software_Architecture_and_Design_Specification_SADD.md](docs/3_Software_Architecture_and_Design_Specification_SADD.md)
-
-### Option 3: Web Portal (Interactive HTML)
-- [docs/index.html](docs/index.html)

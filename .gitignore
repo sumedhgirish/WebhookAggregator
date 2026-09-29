@@ -16,3 +16,7 @@ clean_text_formatting.py
 
 # Unsorted raw image dumps (official diagrams are curated in docs/assets/)
 WhatsApp Image*
+
+# HTML preview files
+*.html
+
