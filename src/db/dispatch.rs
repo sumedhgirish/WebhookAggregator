@@ -1,4 +1,4 @@
-use super::*;
+use super::{Database, Queryable};
 
 impl Database {
     pub async fn get_service(

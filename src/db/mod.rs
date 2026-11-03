@@ -1,13 +1,14 @@
 pub mod config;
-mod dispatch;
+pub mod dispatch;
 pub mod query;
 
 pub use config::DatabaseConfig;
 pub use mysql_async::prelude::*;
 
-use crate::*;
+use crate::info;
 
 impl DatabaseConfig {
+    #[must_use]
     pub fn to_opts(&self, with_db: bool) -> mysql_async::OptsBuilder {
         let b = mysql_async::OptsBuilder::default()
             .ip_or_hostname(self.host.clone())

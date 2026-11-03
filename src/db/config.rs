@@ -20,6 +20,7 @@ impl Default for DatabaseConfig {
 }
 
 impl DatabaseConfig {
+    #[must_use]
     pub fn try_load_env() -> Self {
         dotenvy::dotenv().ok();
 

@@ -7,19 +7,42 @@ use tokio::time::{sleep, timeout};
 use tokio_util::sync::CancellationToken;
 
 use crate::Database;
-use crate::*;
+use crate::{info, warn, debug, error};
 
-const MAX_ATTEMPTS: u32 = 5;
-const ATTEMPT_TIMEOUT: Duration = Duration::from_secs(10);
-const BASE_DELAY: Duration = Duration::from_millis(500);
-const MAX_DELAY: Duration = Duration::from_secs(30);
-const MAX_DB_DELAY: Duration = Duration::from_secs(5);
-const IDLE_RECHECK: Duration = Duration::from_secs(5);
+pub const MAX_ATTEMPTS: u32 = 5;
+pub const ATTEMPT_TIMEOUT: Duration = Duration::from_secs(10);
+pub const BASE_DELAY: Duration = Duration::from_millis(500);
+pub const MAX_DELAY: Duration = Duration::from_secs(30);
+pub const MAX_DB_DELAY: Duration = Duration::from_secs(5);
+pub const IDLE_RECHECK: Duration = Duration::from_secs(5);
 
-enum Attempt {
+#[derive(Debug, PartialEq, Eq, Clone)]
+pub enum Attempt {
     Delivered,
     Retry(String),
     GiveUp(String),
+}
+
+impl Attempt {
+    #[must_use]
+    pub fn classify_status(s: reqwest::StatusCode) -> Self {
+        if s.is_success() {
+            Self::Delivered
+        } else if s.is_server_error() || s == reqwest::StatusCode::TOO_MANY_REQUESTS {
+            Self::Retry(s.to_string())
+        } else {
+            Self::GiveUp(s.to_string())
+        }
+    }
+}
+
+#[must_use]
+pub fn calculate_retry_delay(attempt: u32) -> Duration {
+    let mut delay = BASE_DELAY;
+    for _ in 1..attempt {
+        delay = (delay * 2).min(MAX_DELAY);
+    }
+    delay
 }
 
 /// Per-service wake-up hints from the listener. A ring only means "look again": rings that
@@ -35,7 +58,8 @@ impl Doorbells {
         self.bell(service_id).notify_one();
     }
 
-    fn bell(&self, service_id: u32) -> Arc<Notify> {
+    #[must_use]
+    pub fn bell(&self, service_id: u32) -> Arc<Notify> {
         self.bells
             .lock()
             .unwrap()
@@ -47,7 +71,8 @@ impl Doorbells {
             .clone()
     }
 
-    fn services(&self) -> Vec<u32> {
+    #[must_use]
+    pub fn services(&self) -> Vec<u32> {
         self.bells.lock().unwrap().keys().copied().collect()
     }
 }
@@ -60,6 +85,7 @@ pub struct Dispatcher {
 }
 
 impl Dispatcher {
+    #[must_use]
     pub fn init(database: Database) -> Self {
         Self {
             database,
@@ -68,7 +94,7 @@ impl Dispatcher {
         }
     }
 
-    async fn try_send(&self, url: &str, payload: &str) -> Attempt {
+    pub async fn try_send(&self, url: &str, payload: &str) -> Attempt {
         let req = self
             .http
             .post(url)
@@ -81,14 +107,7 @@ impl Dispatcher {
             Ok(Err(e)) if e.is_builder() => Attempt::GiveUp(e.to_string()),
             Ok(Err(e)) => Attempt::Retry(e.to_string()),
             Ok(Ok(resp)) => {
-                let s = resp.status();
-                if s.is_success() {
-                    Attempt::Delivered
-                } else if s.is_server_error() || s == reqwest::StatusCode::TOO_MANY_REQUESTS {
-                    Attempt::Retry(s.to_string())
-                } else {
-                    Attempt::GiveUp(s.to_string())
-                }
+                Attempt::classify_status(resp.status())
             }
         }
     }
@@ -103,7 +122,7 @@ impl Dispatcher {
         _slot: OwnedSemaphorePermit,
         in_flight: Arc<Mutex<HashSet<u64>>>,
     ) {
-        info!("Dispatched request to {}", url);
+        info!("Dispatched request to {url}");
 
         let mut delay = BASE_DELAY;
         let mut status = "FAILED";
@@ -111,26 +130,24 @@ impl Dispatcher {
         for attempt in 1..=MAX_ATTEMPTS {
             match self.try_send(&url, &payload).await {
                 Attempt::Delivered => {
-                    info!("Delivered to {} on attempt {}", url, attempt);
+                    info!("Delivered to {url} on attempt {attempt}");
                     status = "SUCCESS";
                     break;
                 }
                 Attempt::GiveUp(why) => {
-                    warn!("Delivery to {} rejected: {}", url, why);
+                    warn!("Delivery to {url} rejected: {why}");
                     break;
                 }
                 Attempt::Retry(why) if attempt < MAX_ATTEMPTS => {
                     warn!(
-                        "Attempt {}/{} to {} failed: {}, retrying in {:?}",
-                        attempt, MAX_ATTEMPTS, url, why, delay
+                        "Attempt {attempt}/{MAX_ATTEMPTS} to {url} failed: {why}, retrying in {delay:?}"
                     );
                     sleep(delay).await;
                     delay = (delay * 2).min(MAX_DELAY);
                 }
                 Attempt::Retry(why) => {
                     warn!(
-                        "Giving up on {} after {} attempts: {}",
-                        url, MAX_ATTEMPTS, why
+                        "Giving up on {url} after {MAX_ATTEMPTS} attempts: {why}"
                     );
                 }
             }
@@ -150,7 +167,7 @@ impl Dispatcher {
     async fn claimer(self, service_id: u32, bell: Arc<Notify>, stop: CancellationToken) {
         let (url, capacity) =
             persist("Loading service", || self.database.get_service(service_id)).await;
-        info!("Loaded capacity {} for service {}", capacity, service_id);
+        info!("Loaded capacity {capacity} for service {service_id}");
 
         let url: Arc<str> = url.into();
         let slots = Arc::new(Semaphore::new(capacity));
@@ -183,8 +200,7 @@ impl Dispatcher {
             match claimed {
                 Err(e) => {
                     warn!(
-                        "Claim for service {} failed: {}, retrying in {:?}",
-                        service_id, e, delay
+                        "Claim for service {service_id} failed: {e}, retrying in {delay:?}"
                     );
                     recover = true;
                     drop(slot);
@@ -197,11 +213,11 @@ impl Dispatcher {
                     if stop.is_cancelled() {
                         break;
                     }
-                    debug!("Service {} has no pending requests", service_id);
+                    debug!("Service {service_id} has no pending requests");
                     tokio::select! {
-                        _ = bell.notified() => {}
-                        _ = sleep(IDLE_RECHECK) => {}
-                        _ = stop.cancelled() => {}
+                        () = bell.notified() => {}
+                        () = sleep(IDLE_RECHECK) => {}
+                        () = stop.cancelled() => {}
                     }
                 }
                 Ok(jobs) => {
@@ -266,8 +282,8 @@ impl Dispatcher {
             }
 
             tokio::select! {
-                _ = self.doorbells.added.notified() => {}
-                _ = stop.cancelled() => break,
+                () = self.doorbells.added.notified() => {}
+                () = stop.cancelled() => break,
             }
         }
 
@@ -292,7 +308,7 @@ where
         match op().await {
             Ok(v) => return v,
             Err(e) => {
-                error!("{} failed: {}, retrying in {:?}", what, e, delay);
+                error!("{what} failed: {e}, retrying in {delay:?}");
                 sleep(delay).await;
                 delay = (delay * 2).min(MAX_DB_DELAY);
             }
@@ -302,6 +318,6 @@ where
 
 fn report(res: Result<(), tokio::task::JoinError>) {
     if let Err(e) = res {
-        error!("Dispatch task failed: {}", e);
+        error!("Dispatch task failed: {e}");
     }
 }

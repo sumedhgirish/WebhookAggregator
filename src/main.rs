@@ -1,13 +1,9 @@
-mod db;
-mod dispatcher;
-mod listener;
-
 pub use log::*;
 
-use db::Database;
-use dispatcher::Dispatcher;
-use listener::WebListener;
 use tokio_util::sync::CancellationToken;
+use wagg::db::Database;
+use wagg::dispatcher::Dispatcher;
+use wagg::listener::WebListener;
 
 #[tokio::main]
 async fn main() -> Result<(), Box<dyn std::error::Error>> {

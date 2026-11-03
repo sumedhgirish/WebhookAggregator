@@ -1,9 +1,10 @@
-use super::*;
+use super::{params, info, Database, Queryable};
 
 use chrono::{DateTime, Utc};
 use ed25519_dalek::{Signature, VerifyingKey};
 use sha2::{Digest, Sha256};
 
+#[derive(Debug, Clone)]
 pub struct Query {
     pub signature: [u8; 64], // signed hash of payload
     pub event_id: [u8; 16],
@@ -12,6 +13,7 @@ pub struct Query {
     pub payload: String,
 }
 
+#[derive(Debug)]
 pub enum QueryErr {
     BadRequest,
     UnknownClient(String),
@@ -117,7 +119,8 @@ impl Database {
     }
 }
 
-fn qhash(query: &Query) -> [u8; 32] {
+#[must_use]
+pub fn qhash(query: &Query) -> [u8; 32] {
     let mut h = Sha256::new();
 
     // Mix content into digest
@@ -129,7 +132,7 @@ fn qhash(query: &Query) -> [u8; 32] {
     h.finalize().into()
 }
 
-fn verify_signature(query: &Query, pub_key: &[u8; 32]) -> Result<(), QueryErr> {
+pub fn verify_signature(query: &Query, pub_key: &[u8; 32]) -> Result<(), QueryErr> {
     let vk = VerifyingKey::from_bytes(pub_key).map_err(|_| QueryErr::UnauthorizedRequest)?;
     let sig = Signature::from_bytes(&query.signature);
 

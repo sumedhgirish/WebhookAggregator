@@ -1,5 +1,5 @@
 use crate::db::query::{Query, QueryErr};
-use crate::*;
+use crate::{warn, error};
 
 use axum::{
     http::StatusCode,
@@ -7,7 +7,7 @@ use axum::{
 };
 use chrono::{DateTime, Utc};
 
-#[derive(Debug, serde::Deserialize)]
+#[derive(Debug, Clone, serde::Serialize, serde::Deserialize)]
 pub struct Request {
     pub client_name: String,
     pub nonce: String,
@@ -29,7 +29,7 @@ impl TryFrom<Request> for Query {
         let datetime =
             DateTime::<Utc>::from_timestamp(req.datetime, 0).ok_or(QueryErr::BadRequest)?;
 
-        Ok(Query {
+        Ok(Self {
             signature: id,
             client_name: req.client_name,
             event_id: nonce,
@@ -47,7 +47,7 @@ impl IntoResponse for QueryErr {
                 (StatusCode::BAD_REQUEST, "bad request")
             }
             Self::UnknownClient(client_name) => {
-                warn!("Ignoring unknown client with name: {}", client_name);
+                warn!("Ignoring unknown client with name: {client_name}");
                 (StatusCode::UNAUTHORIZED, "unauthorized")
             }
             Self::UnauthorizedRequest => {
@@ -55,15 +55,15 @@ impl IntoResponse for QueryErr {
                 (StatusCode::UNAUTHORIZED, "unauthorized")
             }
             Self::DatabaseError(dberr) => {
-                error!("Database error: {}", dberr);
+                error!("Database error: {dberr}");
                 (StatusCode::INTERNAL_SERVER_ERROR, "internal error")
             }
             Self::UnknownService(endpoint) => {
-                warn!("No service assigned to requested endpoint: {}", endpoint);
+                warn!("No service assigned to requested endpoint: {endpoint}");
                 (StatusCode::BAD_REQUEST, "bad request")
             }
             Self::ServiceUnavailable(service_name) => {
-                error!("Got request to inactive service: {}", service_name);
+                error!("Got request to inactive service: {service_name}");
                 (StatusCode::SERVICE_UNAVAILABLE, "service unavailable")
             }
         }
