@@ -1,10 +1,10 @@
 # Deviations from Submitted Specification
 ## Webhook Aggregator System (wagg / WACDP)
 
-**Project Code:** BPS49 — Webhook Aggregator Core Development Pipeline
-**Team:** Sumedh Girish (`PES1UG24CS480`), Subramani B M (`PES1UG24CS473`), Sujan S Halanannavar (`PES1UG24CS477`), Skanda Shyam Nadig (`PES1UG24CS458`)
-**Baseline documents:** SRS v1.0, Software Test Plan v1.0, SADD v1.0 (all dated 29 Sept 2026)
-**Implementation compared:** `main` @ `aa5baf6` (`src/`, ~900 lines of Rust)
+**Project Code:** BPS49 — Webhook Aggregator Core Development Pipeline  
+**Team:** Sumedh Girish (`PES1UG24CS480`), Subramani B M (`PES1UG24CS473`), Sujan S Halanannavar (`PES1UG24CS477`), Skanda Shyam Nadig (`PES1UG24CS458`)  
+**Baseline documents:** SRS v1.0, Software Test Plan v1.0, SADD v1.0 (all dated 29 Sept 2026)  
+**Implementation compared:** `main` @ `a54accf` (Sprint 2 final; `src/` plus 5 test suites in `tests/`)
 
 ---
 
@@ -47,7 +47,7 @@ Each deviation has one of three statuses:
 | D-17 | Log sanitisation (SEC-REQ-04) | Recursive redaction of secrets in audit log | — | Not implemented |
 | D-18 | Payload limits (FR-01) | 413 above 64 KB, staging above 2 KB | Axum default body limit (2 MB); no staging | Changed |
 | D-19 | Replay protection (Test Plan §5.1.2) | Timestamp window check | Timestamp is signed but not checked against the clock | Partial |
-| D-20 | Automated tests (Test Plan §5, §10) | Catch2/PyTest suites, TSan, Valgrind, k6 | CI build + MariaDB smoke test; no unit or integration tests | Partial |
+| D-20 | Automated tests (Test Plan §5, §10) | Catch2/PyTest suites, TSan, Valgrind, k6 | 25 Rust tests in 5 suites, run by `cargo test` in CI, + MariaDB smoke test | Changed |
 
 ---
 
@@ -282,13 +282,31 @@ Each deviation has one of three statuses:
 
 - **Specified:** Test Plan §5.2–§5.5 and §10 (28 test cases), using Catch2/PyTest, TSan, Valgrind
   and k6/wrk.
-- **Implemented:** The GitHub Actions workflow (`.github/workflows/ci.yml`) runs `cargo check`,
-  `cargo build --release` and `cargo test`, then a smoke test that starts the listener against a
-  MariaDB service container and checks the schema is created. There are **no** `#[test]` functions
-  in the crate yet, so `cargo test` runs zero tests. Performance figures are in
+- **Implemented:** Sprint 2 (PR #15) added 25 tests in five suites under `tests/`, written with
+  Rust's built-in test framework:
+
+  | Suite | Tests | Covers |
+  |---|---|---|
+  | `ingestion_gateway.rs` | 8 | Request parsing, hex and length checks, Ed25519 verification, tampered payload and timestamp |
+  | `outbound_http_dispatcher.rs` | 5 | Delivery to a mock receiver; retry on 429 and 503, give up on 404 |
+  | `exponential_backoff_retry_engine.rs` | 4 | Delay doubling, the 30 s cap, timing constants, database retry cap |
+  | `dead_letter_persistence.rs` | 4 | Poison-pill isolation, transient-error retry, retry exhaustion, error-to-HTTP mapping |
+  | `concurrency_stress_suite.rs` | 4 | Doorbell wake-ups under load, per-service isolation, semaphore capacity bound |
+
+  The GitHub Actions workflow (`.github/workflows/ci.yml`) runs `cargo check`,
+  `cargo build --release` and `cargo test` on every push and pull request, then a smoke test that
+  starts the listener against a MariaDB service container. All 25 tests pass in CI. Results are in
+  `docs/Unit_Test_Report.md`, with coverage in `docs/Code_Coverage_Report.md` and
+  `docs/Branch_Coverage_Report.md`. Performance figures are in
   `docs/4_Performance_Benchmark_Datasheet_Report.pdf`.
-- **Impact:** Most cases in Test Plan §10 have to be run by hand with `curl` and a mock receiver.
-  The cases tied to D-11 to D-17 can't pass yet.
+
+- **Rationale:** Catch2, PyTest, TSan and Valgrind were chosen for C++. With the move to Rust (D-01)
+  the built-in test framework replaces them, and the compiler's ownership checks replace TSan and
+  Valgrind.
+- **Impact:** Test Plan §10 cases for ingestion, signature verification, dispatch, backoff and
+  failure classification are now automated. Load testing with k6/wrk is still done outside CI (see the
+  performance datasheet). The cases tied to D-11 to D-17 can't pass because those features are not
+  implemented.
 
 ---
 
@@ -329,5 +347,5 @@ Each deviation has one of three statuses:
 | 6 | Implement egress HMAC headers | D-14 |
 | 7 | Add the status, health and redrive endpoints | D-12, D-13 |
 | 8 | Add `attempts` and `last_error` columns, and an append-only audit log | D-09, D-17 |
-| 9 | Add unit tests (signature verification, retry classification) and an integration test with a mock receiver | D-20 |
+| 9 | ~~Add unit tests (signature verification, retry classification) and an integration test with a mock receiver~~ Done in Sprint 2 (PR #15) | D-20 |
 | 10 | Recurring schedules | D-11 |
