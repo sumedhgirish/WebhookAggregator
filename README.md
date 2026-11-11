@@ -41,7 +41,23 @@ WebhookAggregator/
 ├── report.pdf                                            # Performance Datasheet (Root Copy)
 ├── Cargo.toml                                            # Rust Package Configuration
 ├── Cargo.lock                                            # Cargo Dependency Lockfile
+├── .github/workflows/
+│   ├── ci.yml                                            # Build, Clippy & MariaDB Smoke Test
+│   └── pr_automation.yml                                 # PR & Commit Automation
 ├── src/                                                  # Production Rust Codebase (wagg)
+│   ├── main.rs / lib.rs                                  # Entry Point & Library Root
+│   ├── listener/                                         # Ingestion Gateway & Signature Verification
+│   ├── dispatcher/                                       # Per-Service Claimers, Retry & Backoff
+│   └── db/                                               # MariaDB Queue, Config & Dispatch State
+├── tests/                                                # Integration Test Suites
+│   ├── ingestion_gateway.rs
+│   ├── outbound_http_dispatcher.rs
+│   ├── exponential_backoff_retry_engine.rs
+│   ├── dead_letter_persistence.rs
+│   └── concurrency_stress_suite.rs
+├── demo/                                                 # Sprint Demo Videos
+│   ├── sprint1_demo.mp4                                  # Sprint-1 Outcome (1 min)
+│   └── sprint2_demo.mp4                                  # Sprint-2 Outcome (2 min)
 └── docs/
     ├── 1_Software_Requirements_Specification_SRS.md      # IEEE 830 SRS Document (Markdown)
     ├── 1_Software_Requirements_Specification_SRS.pdf     # IEEE 830 SRS Document (Presentation PDF)
@@ -50,10 +66,27 @@ WebhookAggregator/
     ├── 3_Software_Architecture_and_Design_Specification_SADD.md # IEEE 1016 SADD Document (Markdown)
     ├── 3_Software_Architecture_and_Design_Specification_SADD.pdf # IEEE 1016 SADD Document (Presentation PDF)
     ├── 4_Performance_Benchmark_Datasheet_Report.pdf      # Performance Datasheet & USL Report (PDF)
+    ├── 5_Deviations_from_Specification.md                # Deviations from SRS / STP / SADD (Markdown)
+    ├── 5_Deviations_from_Specification.pdf               # Deviations from SRS / STP / SADD (PDF)
+    ├── Unit_Test_Report.md                               # Unit Test Results
+    ├── Code_Coverage_Report.md                           # Line Coverage Report
+    ├── Branch_Coverage_Report.md                         # Branch Coverage Report
+    ├── System_Validation_Report.md                       # System Validation Results
     └── assets/
         ├── uml_use_case_diagram.jpeg                     # Webhook Aggregator Use Case Model
         └── activity_workflow_diagram.jpeg                # Webhook Aggregator 5-Swimlane Workflow
 ```
+
+---
+
+## Sprint Tracking & Demo Videos
+
+| Sprint | Dates | Backlog (milestone) | Demo video |
+| :--- | :--- | :--- | :--- |
+| Sprint 1 | 19th–23rd Oct 2026 | [Sprint 1 issues](https://github.com/sumedhgirish/WebhookAggregator/milestone/1?closed=1) | [demo/sprint1_demo.mp4](demo/sprint1_demo.mp4) |
+| Sprint 2 | 26th–30th Oct 2026 | [Sprint 2 issues](https://github.com/sumedhgirish/WebhookAggregator/milestone/2?closed=1) | [demo/sprint2_demo.mp4](demo/sprint2_demo.mp4) |
+
+Backlog items not delivered in this release (recurring schedules, status/health and DLQ redrive APIs) remain open and are explained in [docs/5_Deviations_from_Specification.md](docs/5_Deviations_from_Specification.md).
 
 ---
 
