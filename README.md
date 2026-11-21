@@ -1,6 +1,7 @@
 # Webhook Aggregator System (wagg / WACDP)
 ## High-Throughput, Multi-Threaded Event Ingestion, Buffering & Reliable Dispatching Middleware
 
+**Course:** Software Engineering (Mini-Project)  
 **Project Code / Topic:** BPS49 — Webhook Aggregator Core Development Pipeline  
 **Team Members:**  
 - **Sumedh Girish** (SRN: `PES1UG24CS480`)  
@@ -9,7 +10,7 @@
 - **Skanda Shyam Nadig** (SRN: `PES1UG24CS458`)  
 **Institution:** Department of Computer Science & Engineering, PES University  
 **Baseline Version:** 1.0  
-**Status:** Production-Ready & Verified  
+**Status:** Sprint 2 Final — Verified & Documented (see [Deviations from Specification](docs/5_Deviations_from_Specification.md))  
 
 ---
 
@@ -28,7 +29,8 @@ All documents follow formal **IEEE Engineering Standards** (IEEE Std 830, IEEE S
 | **3. Software Architecture & Design Specification (SADD)** | **IEEE Std 1016-2009** | • **Architecture:** Component Diagram & 9 Descriptions, Architectural Patterns, Requirements Traceability, Security Architecture<br/>• **Design:** ≥ 2 UML Sequence Diagrams, Multi-Swimlane Activity Diagram, REST API Design, Error Handling & Backoff Math | **100% Compliant** | [PDF Version (17 pages)](docs/3_Software_Architecture_and_Design_Specification_SADD.pdf)<br/>[Markdown](docs/3_Software_Architecture_and_Design_Specification_SADD.md) |
 | **4. Test Cases Suite (Test Plan Update)** | IEEE Std 829 Test Case Specifications | • Sufficient coverage of both FRs and NFRs<br/>• Comprehensive suite (Includes **28 fully elaborated test cases** across Functional, Non-Functional, Security, and E2E) | **100% Compliant** | Included in [docs/2_Software_Test_Plan_and_Test_Cases.pdf](docs/2_Software_Test_Plan_and_Test_Cases.pdf) & [Markdown](docs/2_Software_Test_Plan_and_Test_Cases.md#10-comprehensive-test-cases-functional-non-functional--security) |
 | **5. Performance Benchmark Datasheet** | System Performance & Verification Report | • Universal Scalability Law (USL) fitting (12.6k req/s)<br/>• Ingestion latency percentiles ($p99 < 15$ ms)<br/>• Little's Law dispatch capacity & memory profiles<br/>• CPU FlameGraphs & database fault recovery | **100% Verified** | [PDF Version (12 pages)](docs/4_Performance_Benchmark_Datasheet_Report.pdf) |
-| **6. Deviations from Specification** | Change record against SRS / STP / SADD v1.0 | • 20 deviations with rationale and status<br/>• Updated requirement traceability<br/>• Follow-up actions | **Current** | [Markdown](docs/5_Deviations_from_Specification.md) |
+| **6. Deviations from Specification** | Change record against SRS / STP / SADD v1.0 | • 20 deviations with rationale and status<br/>• Updated requirement traceability<br/>• Follow-up actions | **100% Compliant** | [PDF Version](docs/5_Deviations_from_Specification.pdf)<br/>[Markdown](docs/5_Deviations_from_Specification.md) |
+| **7. Quality Assurance & Test Execution Reports** | Generated Reports (docs folder) | • Unit Test Execution Report (28 Test Cases)<br/>• Code & Line Coverage Report (86.4% Coverage)<br/>• Branch Coverage Report (82.1% Decision Coverage)<br/>• System Validation & E2E Verification Report | **100% Compliant** | [Unit Test](docs/Unit_Test_Report.md)<br/>[Code Coverage](docs/Code_Coverage_Report.md)<br/>[Branch Coverage](docs/Branch_Coverage_Report.md)<br/>[System Validation](docs/System_Validation_Report.md) |
 
 ---
 
@@ -39,6 +41,7 @@ WebhookAggregator/
 ├── README.md                                             # System Overview & Architecture Index
 ├── SCRUM_SumedhGirish_PES1UG24CS480_BPS49WebhookAggregator.pdf # Jira Sprint Backlog & Epics
 ├── report.pdf                                            # Performance Datasheet (Root Copy)
+├── SE_sprint_video.mp4                                   # Combined Sprint Demo Video (Root Copy)
 ├── Cargo.toml                                            # Rust Package Configuration
 ├── Cargo.lock                                            # Cargo Dependency Lockfile
 ├── .github/workflows/
@@ -50,14 +53,13 @@ WebhookAggregator/
 │   ├── dispatcher/                                       # Per-Service Claimers, Retry & Backoff
 │   └── db/                                               # MariaDB Queue, Config & Dispatch State
 ├── tests/                                                # Integration Test Suites
-│   ├── ingestion_gateway.rs
-│   ├── outbound_http_dispatcher.rs
-│   ├── exponential_backoff_retry_engine.rs
-│   ├── dead_letter_persistence.rs
-│   └── concurrency_stress_suite.rs
+│   ├── ingestion_gateway.rs                              # Ingestion & Signature Verification Tests
+│   ├── outbound_http_dispatcher.rs                       # Dispatcher & HTTP Sink Tests
+│   ├── exponential_backoff_retry_engine.rs               # Backoff & Retry Sequence Tests
+│   ├── dead_letter_persistence.rs                        # DLQ Persistence & Crash Recovery Tests
+│   └── concurrency_stress_suite.rs                       # High-Concurrency Stress Tests
 ├── demo/                                                 # Sprint Demo Videos
-│   ├── sprint1_demo.mp4                                  # Sprint-1 Outcome (1 min)
-│   └── sprint2_demo.mp4                                  # Sprint-2 Outcome (2 min)
+│   └── SE_sprint_video.mp4                               # Working Product Demo (Sprint 1 + Sprint 2)
 └── docs/
     ├── 1_Software_Requirements_Specification_SRS.md      # IEEE 830 SRS Document (Markdown)
     ├── 1_Software_Requirements_Specification_SRS.pdf     # IEEE 830 SRS Document (Presentation PDF)
@@ -68,9 +70,9 @@ WebhookAggregator/
     ├── 4_Performance_Benchmark_Datasheet_Report.pdf      # Performance Datasheet & USL Report (PDF)
     ├── 5_Deviations_from_Specification.md                # Deviations from SRS / STP / SADD (Markdown)
     ├── 5_Deviations_from_Specification.pdf               # Deviations from SRS / STP / SADD (PDF)
-    ├── Unit_Test_Report.md                               # Unit Test Results
-    ├── Code_Coverage_Report.md                           # Line Coverage Report
-    ├── Branch_Coverage_Report.md                         # Branch Coverage Report
+    ├── Unit_Test_Report.md                               # Unit Test Execution Results
+    ├── Code_Coverage_Report.md                           # Line Coverage Report (86.4%)
+    ├── Branch_Coverage_Report.md                         # Branch Coverage Report (82.1%)
     ├── System_Validation_Report.md                       # System Validation Results
     └── assets/
         ├── uml_use_case_diagram.jpeg                     # Webhook Aggregator Use Case Model
@@ -79,14 +81,41 @@ WebhookAggregator/
 
 ---
 
-## Sprint Tracking & Demo Videos
+## Agile Planning, Project Board & Sprint Tracking
 
-| Sprint | Dates | Backlog (milestone) | Demo video |
-| :--- | :--- | :--- | :--- |
-| Sprint 1 | 19th–23rd Oct 2026 | [Sprint 1 issues](https://github.com/sumedhgirish/WebhookAggregator/milestone/1?closed=1) | [demo/sprint1_demo.mp4](demo/sprint1_demo.mp4) |
-| Sprint 2 | 26th–30th Oct 2026 | [Sprint 2 issues](https://github.com/sumedhgirish/WebhookAggregator/milestone/2?closed=1) | [demo/sprint2_demo.mp4](demo/sprint2_demo.mp4) |
+- **GitHub Project Board / Milestones:**
+  - [Sprint 1 Milestone (19th–23rd Oct 2026)](https://github.com/skandanadig/WebhookAggregator/milestone/1)
+  - [Sprint 2 Milestone (26th–30th Oct 2026)](https://github.com/skandanadig/WebhookAggregator/milestone/2)
+- **Original Scrum / Jira Backlog Export:** [`SCRUM_SumedhGirish_PES1UG24CS480_BPS49WebhookAggregator.pdf`](SCRUM_SumedhGirish_PES1UG24CS480_BPS49WebhookAggregator.pdf)
+- **CI / CD Workflows:** GitHub Actions configured for automated PR checks, MariaDB smoke testing, and linting in [`.github/workflows/`](.github/workflows/).
 
-Backlog items not delivered in this release (recurring schedules, status/health and DLQ redrive APIs) remain open and are explained in [docs/5_Deviations_from_Specification.md](docs/5_Deviations_from_Specification.md).
+### Sprint Deliverables & Video Demonstrations
+
+| Sprint | Dates | Backlog & Milestones | Scope & Deliverables | Demo Video |
+| :--- | :--- | :--- | :--- | :--- |
+| **Sprint 1** | 19th–23rd Oct 2026 | [Sprint 1 Milestone](https://github.com/skandanadig/WebhookAggregator/milestone/1) | Ingestion Gateway, Ed25519/HMAC-SHA256 Auth, MariaDB FIFO queue buffering, claimer loop, CI/CD pipeline | [demo/SE_sprint_video.mp4](demo/SE_sprint_video.mp4) *(Part 1)* |
+| **Sprint 2** | 26th–30th Oct 2026 | [Sprint 2 Milestone](https://github.com/skandanadig/WebhookAggregator/milestone/2) | Capacity-bounded dispatching, exponential backoff retries, DLQ persistence, stress suite, performance benchmarks | [demo/SE_sprint_video.mp4](demo/SE_sprint_video.mp4) *(Part 2)* |
+
+> **Note on Demo Video:** The product demonstration video [`SE_sprint_video.mp4`](SE_sprint_video.mp4) (also in [`demo/SE_sprint_video.mp4`](demo/SE_sprint_video.mp4)) provides a comprehensive end-to-end walkthrough covering both Sprint 1 (core ingestion, queueing, auth) and Sprint 2 (dispatcher, retry mechanism, dead-letter storage, failure simulation).
+
+Backlog items not delivered in this release (recurring schedules, status/health, and DLQ redrive APIs) remain documented as formal deviations with rationale in [docs/5_Deviations_from_Specification.md](docs/5_Deviations_from_Specification.md).
+
+---
+
+## Project Evaluation Checklist Mapping
+
+This table maps the repository deliverables directly against the **Software Engineering Evaluation Checklist**:
+
+| Evaluation Item | Description & Coverage | Repository Evidence / Artifact |
+| :--- | :--- | :--- |
+| **Part-1: SRS** | Standard IEEE 830 format, intro/descriptive sections, FRs/NFRs clearly specified, UML Use Case diagram, Security (≥2 objectives & ≥2 requirements). | [SRS (MD)](docs/1_Software_Requirements_Specification_SRS.md) & [SRS (PDF)](docs/1_Software_Requirements_Specification_SRS.pdf) |
+| **Part-1: Test Plan** | Standard IEEE 829 format, Sections 3, 4, 5 filled, Section 5.1 security validation, SRS traceability matrix, 28 test cases covering FRs & NFRs. | [Test Plan (MD)](docs/2_Software_Test_Plan_and_Test_Cases.md) & [Test Plan (PDF)](docs/2_Software_Test_Plan_and_Test_Cases.pdf) |
+| **Part-1: SAD Specification** | Standard IEEE 1016 format, 9 component descriptions, EDA/Worker Pool patterns, traceability, security arch, 2 UML sequence diagrams, 5-swimlane activity diagram, REST APIs, backoff error protocols. | [SADD (MD)](docs/3_Software_Architecture_and_Design_Specification_SADD.md) & [SADD (PDF)](docs/3_Software_Architecture_and_Design_Specification_SADD.pdf) |
+| **Part-2: Agile & Backlog** | GitHub Milestones & Issues created using FRs/NFRs, story points assigned, assignees distributed, Sprint 1 & 2 planned. | [Sprint 1](https://github.com/skandanadig/WebhookAggregator/milestone/1) & [Sprint 2](https://github.com/skandanadig/WebhookAggregator/milestone/2), [Jira Export](SCRUM_SumedhGirish_PES1UG24CS480_BPS49WebhookAggregator.pdf) |
+| **Part-2: Sprint 1 Execution** | GitHub Actions CI/PR workflows enabled, code implemented in Rust (`wagg`), PRs raised and reviewed. 1-minute working demo. | [ci.yml](.github/workflows/ci.yml), [pr_automation.yml](.github/workflows/pr_automation.yml), [SE_sprint_video.mp4](SE_sprint_video.mp4) |
+| **Part-2: Sprint 2 Execution** | Development activities frozen, formal deviations document ([docs/5_Deviations_from_Specification.md](docs/5_Deviations_from_Specification.md)), 2-minute working demo. | [Deviations (MD)](docs/5_Deviations_from_Specification.md) & [Deviations (PDF)](docs/5_Deviations_from_Specification.pdf), [SE_sprint_video.mp4](SE_sprint_video.mp4) |
+| **Part-3: Testing & Reports** | Test cases updated for sprint changes, integration tests executed, test and coverage reports generated. | [Unit Test](docs/Unit_Test_Report.md), [Code Coverage](docs/Code_Coverage_Report.md), [Branch Coverage](docs/Branch_Coverage_Report.md), [System Validation](docs/System_Validation_Report.md) |
+| **Part-4: Final Evaluation** | Core use cases fulfilled, deviations documented, clean version control, architecture and performance justified via USL benchmarks. | [Performance Datasheet](docs/4_Performance_Benchmark_Datasheet_Report.pdf), [wagg source](src/) |
 
 ---
 
@@ -151,8 +180,14 @@ Backlog items not delivered in this release (recurring schedules, status/health 
 - [2_Software_Test_Plan_and_Test_Cases.pdf](docs/2_Software_Test_Plan_and_Test_Cases.pdf)
 - [3_Software_Architecture_and_Design_Specification_SADD.pdf](docs/3_Software_Architecture_and_Design_Specification_SADD.pdf)
 - [4_Performance_Benchmark_Datasheet_Report.pdf](docs/4_Performance_Benchmark_Datasheet_Report.pdf) *(or root [report.pdf](report.pdf))*
+- [5_Deviations_from_Specification.pdf](docs/5_Deviations_from_Specification.pdf)
 
 ### Option 2: Markdown Format (GitHub Native)
 - [1_Software_Requirements_Specification_SRS.md](docs/1_Software_Requirements_Specification_SRS.md)
 - [2_Software_Test_Plan_and_Test_Cases.md](docs/2_Software_Test_Plan_and_Test_Cases.md)
 - [3_Software_Architecture_and_Design_Specification_SADD.md](docs/3_Software_Architecture_and_Design_Specification_SADD.md)
+- [5_Deviations_from_Specification.md](docs/5_Deviations_from_Specification.md)
+- [Unit Test Report](docs/Unit_Test_Report.md)
+- [Code Coverage Report](docs/Code_Coverage_Report.md)
+- [Branch Coverage Report](docs/Branch_Coverage_Report.md)
+- [System Validation Report](docs/System_Validation_Report.md)
